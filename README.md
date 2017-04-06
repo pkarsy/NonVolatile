@@ -4,17 +4,22 @@ Arduino persistent numeric variables
 In global section:
 ```
 eepromVar<int> counter(0); // Uses EEPROM location 0-1 (2 bytes)
-eepromVar<bool> ledlight(4) // Uses EEPROM location 4 (1 byte)
+eepromVar<bool> greenLed(4) // Uses EEPROM location 4 (1 byte)
 eepromVar<byte> triesNumber(8) // Uses EEPROM location 8 (1 byte)
 eepromVar<uint32_t> key(12) // Uses EEPROM location 12-15 (4 bytes)
 // Multiples of 4 are a bit sparse but reduce the risk of colissions
 ...
 eepromArray<uint16_t> elevation(80,10); // Uses eeprom locations 80-99 for 10 integers
 ```
-Now in the setup()
+Now in the code
 ```
 counter++; // The change is written to EEPROM
-leflight=true;
+greenLed=HIGH; // is OK as HIGH == true
+```
+Now after after a reset
+```
+...
+digitalWrite(GREEN_LED_PIN, greenLed);
 
 for (byte i=0;i<triesNumber;i++) {
 	// Try something
@@ -44,5 +49,3 @@ important in time critical code.
 eepromVar<int> a(4)[10]; All 10 elements to the array will point to the
 same EEPROM location 4. Use the eepromArray construct.
 
-### eepromArray
-The eepromVar.h defines another one contruct "eepromArray"
