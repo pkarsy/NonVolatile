@@ -2,7 +2,7 @@
 Arduino persistent numeric variables
 
 In global section:
-
+```
 eepromVar<int> counter(0); // Uses EEPROM location 0-1 (2 bytes)
 eepromVar<bool> ledlight(4) // Uses EEPROM location 4 (1 byte)
 eepromVar<byte> triesNumber(8) // Uses EEPROM location 8 (1 byte)
@@ -10,16 +10,16 @@ eepromVar<uint32_t> key(12) // Uses EEPROM location 12-15 (4 bytes)
 // Multiples of 4 are a bit sparse but reduce the risk of colissions
 ...
 eepromArray<uint16_t> elevation(80,10); // Uses eeprom locations 80-99 for 10 integers
-
+```
 Now in the setup()
-
+```
 counter++; // The change is written to EEPROM
 leflight=true;
 
 for (byte i=0;i<triesNumber;i++) {
 	// Try something
 }	
-
+```
 ### Installation
 It is just a single file: "eepromVar.h"
 You can put the directory "eepromVar" in the "libraries" Arduino location
