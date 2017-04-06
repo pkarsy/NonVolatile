@@ -2,7 +2,7 @@
 Arduino persistent numeric variables
 
 In global section:
-```
+```C++
 #include <eepromVar.h>
 // All these variables are not initialized with zero but they get
 // whatever value is in EEPROM
@@ -15,7 +15,7 @@ eepromVar<uint32_t> key(12) // Uses EEPROM location 12-15 (4 bytes)
 eepromArray<uint16_t> elevation(80,10); // Uses eeprom locations 80-99 for 10 integers
 ```
 Now in the code
-```
+```C++
 // The operators += -= ++ -- = == are supported
 // The change is written to EEPROM
 counter++; 
