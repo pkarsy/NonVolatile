@@ -7,9 +7,9 @@ In global section:
 // All these variables are not initialized with zero but they get
 // whatever value is in EEPROM
 eepromVar<int> counter(0); // Uses EEPROM location 0-1 (2 bytes)
-eepromVar<bool> greenLed(4) // Uses EEPROM location 4 (1 byte)
-eepromVar<byte> triesNumber(8) // Uses EEPROM location 8 (1 byte)
-eepromVar<uint32_t> key(12) // Uses EEPROM location 12-15 (4 bytes)
+eepromVar<byte> ledState(4); // Uses EEPROM location 4 (1 byte)
+eepromVar<byte> triesNumber(8); // Uses EEPROM location 8 (1 byte)
+eepromVar<uint32_t> key(12); // Uses EEPROM location 12-15 (4 bytes)
 // Multiples of 4 are a bit sparse but reduce the risk of colissions
 ...
 eepromArray<uint16_t> elevation(80,10); // Uses eeprom locations 80-99 for 10 integers
@@ -19,11 +19,11 @@ Now in the code
 // The operators + - += -= ++ -- = == are supported
 // The change is written to EEPROM
 counter++; 
-greenLed=HIGH; // is OK as HIGH == true
-greenLed=HIGH; // The value is NOT written again in EERPOM
+ledState=HIGH; // 
+ledState=HIGH; // The value is NOT written again in EERPOM
 ...
 ...
-digitalWrite(GREEN_LED_PIN, greenLed);
+digitalWrite(LED_PIN, ledState); // The arduino LED is ON
 
 for (byte i=0;i<triesNumber;i++) {
 	// Try something
@@ -50,7 +50,7 @@ to be sure every one is using its own EEPROM location.
 - In contrast with normal global variables, they are not get 0 at boot.
 - In contrast with avr-libc EMEM variables they are not initialized with
 code upload. If the initial value is important you can use the trick of
-a "guard" variable see example.
+a "guard" variable see example 2.
 - Reading an eepromVar variable should be fast, as the value is
 in RAM, but writing is slow (about 3ms), due to EEPROM write. This can be
 important in time critical code.

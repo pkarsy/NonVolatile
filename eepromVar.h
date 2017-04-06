@@ -9,6 +9,8 @@
  * 
 */
 
+#include <avr/eeprom.h>
+
 template <typename T>
 class eepromVar {
 	private:
