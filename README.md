@@ -15,9 +15,7 @@ Now in the code
 ```
 counter++; // The change is written to EEPROM
 greenLed=HIGH; // is OK as HIGH == true
-```
-Now after after a reset
-```
+...
 ...
 digitalWrite(GREEN_LED_PIN, greenLed);
 
@@ -31,10 +29,10 @@ You can put the directory "eepromVar" in the "libraries" Arduino location
 Or you can put the "eepromVar.h" file in the same location as the .ino file
 
 ### Caveats
-Althrough eepromVar variables look and feel just like normal variables
+Althrough eepromVar variables look and feel just like normal variables,
 there are some things to keep in mind:
 - **You must make sure you are not modify them too often** or the EEPROM
-will wear soon (about 100000 writes)
+will wear soon (about 100000 writes).
 - Almost certainly you must declare them as global variables (or static)
 If they are local, the initialization code will run at every loop. Even
 better declare all of them one after another, like the example above,
