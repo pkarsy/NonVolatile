@@ -16,7 +16,7 @@ eepromArray<uint16_t> elevation(80,10); // Uses eeprom locations 80-99 for 10 in
 ```
 Now in the code
 ```C++
-// The operators += -= ++ -- = == are supported
+// The operators + - += -= ++ -- = == are supported
 // The change is written to EEPROM
 counter++; 
 greenLed=HIGH; // is OK as HIGH == true
