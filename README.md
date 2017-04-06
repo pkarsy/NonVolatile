@@ -4,6 +4,8 @@ Arduino persistent numeric variables
 In global section:
 ```
 #include <eepromVar.h>
+// All these variables are not initialized with zero but they get
+// whatever value is in EEPROM
 eepromVar<int> counter(0); // Uses EEPROM location 0-1 (2 bytes)
 eepromVar<bool> greenLed(4) // Uses EEPROM location 4 (1 byte)
 eepromVar<byte> triesNumber(8) // Uses EEPROM location 8 (1 byte)
@@ -33,7 +35,7 @@ elevation.set(5,100);
 ```
 ### Installation
 It is just a single file: "eepromVar.h"
-You can put the directory "eepromVar" in the "libraries" Arduino location
+You can put the directory "eepromVar" in the "libraries" Arduino location.
 Or you can put the "eepromVar.h" file in the same location as the .ino file
 
 ### Caveats
@@ -45,6 +47,7 @@ will wear soon (about 100000 writes).
 If they are local, the initialization code will run at every loop. It is
 advised to declare all of them one after another, like the example above,
 to be sure every one is using its own EEPROM location.
+- In contrast with normal global variables, they are not get 0 at boot.
 - In contrast with avr-libc EMEM variables they are not initialized with
 code upload. If the initial value is important you can use the trick of
 a "guard" variable see example.
@@ -54,3 +57,6 @@ important in time critical code.
 - Do not try to use an eepromVar variable as array. Do not do
 eepromVar<int> a(4)[10]; All 10 elements to the array will point to the
 same EEPROM location 4. Use the eepromArray construct.
+- Every eepromVar variable eats some RAM, the same amount as the size of
+its type. 1 byte for bool, 2 bytes for int, 4 bytes for long int and
+float 
