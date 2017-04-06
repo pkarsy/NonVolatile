@@ -10,7 +10,7 @@ eepromVar<int> counter(0); // Uses EEPROM location 0-1 (2 bytes)
 eepromVar<byte> ledState(4); // Uses EEPROM location 4 (1 byte)
 eepromVar<byte> triesNumber(8); // Uses EEPROM location 8 (1 byte)
 eepromVar<uint32_t> key(12); // Uses EEPROM location 12-15 (4 bytes)
-// Multiples of 4 are a bit sparse but reduce the risk of colissions
+// Multiples of 4 are a bit sparse but reduce the risk of collisions
 ...
 eepromArray<uint16_t> elevation(80,10); // Uses eeprom locations 80-99 for 10 integers
 ```
@@ -39,7 +39,7 @@ You can put the directory "eepromVar" in the "libraries" Arduino location.
 Or you can put the "eepromVar.h" file in the same location as the .ino file
 
 ### Caveats
-Althrough eepromVar variables look and feel just like normal variables,
+Although eepromVar variables look and feel just like normal variables,
 there are some things to keep in mind:
 - **You must make sure you are not modify them too often** or the EEPROM
 will wear soon (about 100000 writes).
@@ -54,9 +54,7 @@ a "guard" variable see example 2.
 - Reading an eepromVar variable should be fast, as the value is
 in RAM, but writing is slow (about 3ms), due to EEPROM write. This can be
 important in time critical code.
-- Do not try to use an eepromVar variable as array. Do not do
-eepromVar<int> a(4)[10]; All 10 elements to the array will point to the
-same EEPROM location 4. Use the eepromArray construct.
-- Every eepromVar variable eats some RAM, the same amount as the size of
-its type. 1 byte for bool, 2 bytes for int, 4 bytes for long int and
-float 
+- You cannot declare an array of eepromVar variables. There is a distinct
+eepromArray type for this.
+- Every eepromVar variable eats RAM, just like a normal variable, in
+addition to the EEPROM space it uses.
