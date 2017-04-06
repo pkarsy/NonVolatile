@@ -34,8 +34,7 @@ elevation.write(5,100);
 // If anyone knows how to fix this pls help
 ```
 ### Installation
-It is just a single file: "eepromVar.h"
-You can put the directory "eepromVar" in the "libraries" Arduino location.
+Put the directory "eepromVar" in the Arduino "libraries" location.
 Or you can put the "eepromVar.h" file in the same location as the .ino file
 
 ### Caveats
