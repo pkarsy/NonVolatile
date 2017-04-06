@@ -29,7 +29,7 @@ for (byte i=0;i<triesNumber;i++) {
 	// Try something
 }
 Serial.print(elevation[5]);
-elevation.set(5,100);
+elevation.write(5,100);
 // elevation[5]=100; does not work.
 // If anyone knows how to fix this pls help
 ```
