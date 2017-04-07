@@ -46,12 +46,13 @@ Although eepromVar variables look and feel just like normal variables,
 there are some things to keep in mind:
 - **You must make sure you are not modify them too often** or the EEPROM
 will wear soon (about 100000 writes).
-- Almost certainly you must declare them as global variables (or static)
+- Almost certainly you must declare them as global variables (or static).
 If they are local, the initialization code will run at every loop. It is
 advised to declare all of them one after another, like the example above,
 to be sure every one is using its own EEPROM location.
 - In contrast with normal global variables, they are not get 0 at boot.
-- In contrast with avr-libc EMEM variables they are not uploaded with
+This is the purpose of their existence.
+- In contrast with avr-libc EMEM variables they are not updated with
 code upload. If the initial value is important you can use the trick of
 a "guard" variable (see examples).
 - Reading an eepromVar variable should be fast, as the value is cached
