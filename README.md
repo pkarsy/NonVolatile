@@ -18,6 +18,7 @@ eepromArray<uint16_t> elevation(80,10); // Uses eeprom locations 80-99 for 10 in
 Now in the code
 ```C++
 
+// ++ -- *= /= etc are supported
 counter++; // The change is written to EEPROM
 ledState=HIGH; // 
 ledState=HIGH; // The value is NOT written again in EERPOM
