@@ -1,15 +1,16 @@
 # eepromVar
-Arduino persistent numeric variables
+Arduino persistent numeric variables. They can be used just like
+normal variables.
 
 In global section:
 ```C++
 #include <eepromVar.h>
 // All these variables are not initialized with zero but they get
 // whatever value is in EEPROM
-eepromVar<int> counter(0); // Uses EEPROM location 0-1 (2 bytes)
+eepromVar<int> counter(0); // Uses EEPROM location 0-1 (int=2 bytes)
 eepromVar<byte> ledState(4); // Uses EEPROM location 4 (1 byte)
 eepromVar<byte> triesNumber(8); // Uses EEPROM location 8 (1 byte)
-eepromVar<uint32_t> key(12); // Uses EEPROM location 12-15 (4 bytes)
+eepromVar<uint32_t> key(12); // Uses EEPROM location 12-15 (uint32_t=4 bytes)
 // Multiples of 4 are a bit sparse but reduce the risk of collisions
 ...
 eepromArray<uint16_t> elevation(80,10); // Uses eeprom locations 80-99 for 10 integers
@@ -56,9 +57,9 @@ This is the purpose of their existence.
 - In contrast with avr-libc EMEM variables they are not updated with
 code upload. If the initial value is important you can use the trick of
 a "guard" variable (see examples).
-- Reading an eepromVar variable should be fast, as the value is cached
-in RAM, but writing is slow (about 3ms), due to EEPROM write. This can be
-important in time critical code.
+- Reading an eepromVar variable should be fast, but writing is slow
+(about 3ms), due to EEPROM write. This can be important in time critical
+code.
 - If you want to declare an array of eepromVar variables, use the
 eepromArray type.
 - Every eepromVar variable eats some RAM, in addition to the EEPROM space

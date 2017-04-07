@@ -16,20 +16,19 @@ void setup() {
 	Serial.begin(57600);
 	Serial.println();
 	Serial.println("eepromArray example");
-	//Serial.println("Counts keypress");
 	
 	// The variables are set in the first run
 	if (eepromGuard!=EEPROM_IS_SET) {
 		Serial.println("Initializing eepromVar variables");
 		for (byte i=0;i<keycounter.size;i++) keycounter[i]=0;
-		eepromGuard=EEPROM_IS_SET;
+		eepromGuard=EEPROM_IS_SET; // This way the block runs once.
 	}
 	Serial.println("keypress statistics");
 	for (byte i=0;i<keycounter.size;i++) {
 		Serial.print("key \"");
 		Serial.write(i+'0');
 		Serial.print("\":");
-		Serial.println(keycounter[i]);
+		Serial.println(keycounter[i]); // The values come from EEPROM
 	}
 	
 	Serial.println("Press keys 0-9");
