@@ -1,0 +1,13 @@
+
+BOARD_TAG     =  uno
+MONITOR_PORT  =  /dev/ttyACM0
+include /usr/share/arduino/Arduino.mk
+
+send: all
+	fuser -k -STOP ${MONITOR_PORT} || true
+	make do_upload
+	fuser -k -CONT ${MONITOR_PORT} || true
+
+terminal:
+	gtkterm	-p ${MONITOR_PORT} -s 57600 &
+

@@ -4,15 +4,13 @@
 eepromVar<int> counter(0); // Uses EEPROM location 0-1 (2 bytes)
 eepromVar<byte> ledState(4); // Uses EEPROM location 4 (1 byte)
 
-eepromVar<int> a[10](8); //[10];
-int b[10];
 
 #define LED_PIN 13
 
 void setup() {
 	Serial.begin(57600);
-	Serial.println();
-	Serial.println("eepromVar example 1");
+	
+	Serial.println("eepromVar example");
 	pinMode(LED_PIN, OUTPUT);
 	// To initialize the variables change this to true and upload
 	// then back to false and upload again
@@ -29,6 +27,7 @@ void setup() {
 	Serial.print(" LED=");
 	Serial.println(ledState);
 	Serial.println("Press the Arduino reset button");
+	Serial.println();
 
 }
 
