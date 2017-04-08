@@ -6,7 +6,7 @@ In global section:
 
 ```C++
 #include <eepromVar.h>
-// All these variables get whatever value is in EEPROM
+
 eepromVar<int> counter;           // Uses EEPROM addrees 0-1
 eepromVar<byte> triesNumber;      // Uses address 2
 eeprom<uint16_t> elevation[10];   // Uses address 3-22
