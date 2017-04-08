@@ -51,18 +51,17 @@ order only if you are going to reset the values
 - In contrast with normal global variables, they are not get 0 at boot.
 This is the purpose of their existence.
 - In contrast with avr-libc EEMEM variables they are not updated with
-code upload. If the initial value is important (and usually is) you can use the trick of
-a "guard" variable (see the example).
+code upload. If the initial value is important (and usually is) you can use
+a "guard" variable (see below).
 - Reading an eepromVar variable should be fast, but writing is slow
 (about 3ms/byte), due to EEPROM write. This can be important in time critical
 code.
 - Every eepromVar variable eats some RAM, in addition to the EEPROM space
 it uses. sizeof(var) returns the RAM usage, and NOT the RAM  of the type it holds.
-- The actual value of such a variable is also cached in RAM. This means faster reads
-but every variable uses additional RAM. This behaviour is probably going to change.
-- Do no try to change the eepromVar values by direct EEPROM manipulations.
-- If you feel a eepromVar looks like a normal variable more than it should
+- Do not change the eepromVar locations by direct EEPROM manipulations.
+- If you feel a eepromVar looks like a normal variable more than it should,
 you can prefix it with something meaningful like **nv_elevation** (nv = non volatile)
+- large arrays are RAM hungry. sizeof(arr) gives the RAM it uses.
 
 ### Guard variabe
 
@@ -83,4 +82,5 @@ if (eeprom_guard!=MAGIC_VALUE) {
 
 and runs only once. If we change the declarations, most likely
 the code will run again (due to eeprom_guard misaligment) but
-to be sure we can change the MAGIC_VALUE to 1234.
+to be sure we can change the MAGIC_VALUE to 1234. See the
+[example]()
