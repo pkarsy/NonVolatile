@@ -34,8 +34,6 @@ class eepromVar {
 
 	public:
 	
-	
-	
 	eepromVar() {
 		address = eepromvar_idx;
 		eeprom_read_block(&ram_value, (byte*)address, sizeof(T) );

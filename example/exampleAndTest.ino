@@ -4,9 +4,9 @@
 #include <eepromVar.h>
 
 eepromVar<int> counter; // Uses EEPROM location 0-1 (2 bytes)
-eepromVar<long> longvar; // Uses EEPROM location 3 (4 bytes)
+eepromVar<long> longvar; // Uses EEPROM location 2-5 (4 bytes)
 // Change "long" to "int" to see what happens
-eepromVar<long> arr[5]; // Uses EEPROM location 4 (1 byte)
+eepromVar<long> arr[5]; // Uses EEPROM locations 6-25 (1 byte)
 eepromVar<float> float1;
 eepromVar<float> float2;
 eepromVar<unsigned long> eeprom_guard;
@@ -67,9 +67,9 @@ void setup() {
 		}
 		Serial.println("]");
 		PRINT("sizeof(arr)=");Serial.println(sizeof(arr));
-		Serial.print("float1.address=");Serial.println(float1.addr());
-		Serial.print("float2.address=");Serial.println(float2.addr());
-		Serial.print("eeprom_guard.address=");Serial.println(eeprom_guard.addr());
+		Serial.print("float1.addr()=");Serial.println(float1.addr());
+		Serial.print("float2.addr()=");Serial.println(float2.addr());
+		Serial.print("eeprom_guard.addr()=");Serial.println(eeprom_guard.addr());
 	}
 }
 
