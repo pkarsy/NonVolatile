@@ -80,6 +80,7 @@ if (eeprom_guard!=MAGIC_VALUE) {
 }
 
 ```
+
 and runs only once. If we change the declarations, most likely
 the code will run again (due to eeprom_guard misaligment) but
 to be sure we can change the MAGIC_VALUE to 1234.
