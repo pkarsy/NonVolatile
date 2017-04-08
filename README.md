@@ -42,13 +42,14 @@ perhaps too much, there are some things to keep in mind:
 - The location in EEPROM is determined at runtime. If the order of the
 declarations change, in the next upload, the values of eepromVar variables
 can change to different and unexpected values. For a solution see "guard variable"
+below.
 - **You must make sure you are not modify them too often** or the EEPROM
 will wear soon (about 100000 writes).
 - **You must declare them as global variables.** The eeprom location is
 determined at runtime. If they are local, they point to differnet EEPROM
 location every time.
 Declare all of them one after another, like the example above. And of course change the
-order only if you are going to reset the values
+order only if you are going to reset the values.
 - In contrast with normal global variables, they are not get 0 at boot.
 This is the purpose of their existence.
 - In contrast with avr-libc EEMEM variables they are not updated with
