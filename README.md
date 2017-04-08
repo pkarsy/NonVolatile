@@ -46,14 +46,14 @@ location every time.
 Declare all of them one after another, like the example above.
 - In contrast with normal global variables, they are not get 0 at boot.
 This is the purpose of their existence.
-- In contrast with avr-libc EMEM variables they are not updated with
-code upload. If the initial value is important (usually is) you can use the trick of
+- In contrast with avr-libc EEMEM variables they are not updated with
+code upload. If the initial value is important (and usually is) you can use the trick of
 a "guard" variable (see the example).
 - Reading an eepromVar variable should be fast, but writing is slow
 (about 3ms/byte), due to EEPROM write. This can be important in time critical
 code.
-<!-- - Every eepromVar variable eats some RAM, in addition to the EEPROM space
-it uses. sizeof(var) returns the ram usage  -->
+- Every eepromVar variable eats some RAM, in addition to the EEPROM space
+it uses. sizeof(var) returns the RAM usage, and NOT the RAM  of the type it holds.
 - The actual value of such a variable is also cached in RAM. This means faster reads
 but every variable uses additional RAM. This behaviour is probably going to change.
 - Do no try to change the eepromVar values by direct EEPROM manipulations.

@@ -35,7 +35,7 @@ void setup() {
 		float2=0;
 		eeprom_guard=MAGIC_VALUE;
 	}
-	counter++; // The new counter is written to EEPROM 
+	counter--; // The new counter is written to EEPROM 
 	Serial.print("counter=");
 	Serial.println(counter);
 
@@ -57,18 +57,19 @@ void setup() {
 	// Change to false to hide addresses report
 	if (true) {
 		Serial.println(F("Any change in eepromVar declarations can change the addresses"));
-		Serial.print("counter.address=");Serial.println((uint16_t)counter.address);
-		Serial.print("longvar.address=");Serial.println((uint16_t)longvar.address);
+		Serial.print("counter.address=");Serial.println(counter.addr());
+		Serial.print("longvar.address=");Serial.println(longvar.addr());
+		Serial.print("sizeof(longvar)=");Serial.println(sizeof(longvar));
 		Serial.print("arr[] EEPROM addresses=[");
 		for (int i=0;i<5;i++) {
-			Serial.print((uint16_t)arr[i].address);
+			Serial.print(arr[i].addr());
 			Serial.print(" ");
 		}
 		Serial.println("]");
 		PRINT("sizeof(arr)=");Serial.println(sizeof(arr));
-		Serial.print("float1.address=");Serial.println((uint16_t)float1.address);
-		Serial.print("float2.address=");Serial.println((uint16_t)float2.address);
-		Serial.print("eeprom_guard.address=");Serial.println((uint16_t)eeprom_guard.address);
+		Serial.print("float1.address=");Serial.println(float1.addr());
+		Serial.print("float2.address=");Serial.println(float2.addr());
+		Serial.print("eeprom_guard.address=");Serial.println(eeprom_guard.addr());
 	}
 }
 
