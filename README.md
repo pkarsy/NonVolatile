@@ -66,7 +66,7 @@ it uses. sizeof(var) returns the RAM usage, and NOT the RAM  of the type it hold
 - Do not change the eepromVar locations by direct EEPROM manipulations.
 - If you feel a eepromVar looks like a normal variable more than it should,
 you can prefix it with something meaningful like **nv_elevation** (nv = non volatile)
-- large arrays are RAM hungry. sizeof(arr) gives the RAM it uses.
+- Large arrays are RAM hungry. sizeof(arr) gives the RAM it uses.
 
 ### Guard variabe
 

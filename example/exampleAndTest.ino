@@ -68,6 +68,7 @@ void setup() {
 		PRINT("float2.addr()=");Serial.println(float2.addr());
 		PRINT("eeprom_guard.addr()=");Serial.println(eeprom_guard.addr());
 		PRINT("sizeof(longvar)=");Serial.println(sizeof(longvar));
+		PRINT("For comparison sizeof(long)=");Serial.println(sizeof(long));
 		PRINT("sizeof(arr)=");Serial.println(sizeof(arr));
 	}
 }
