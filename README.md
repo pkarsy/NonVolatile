@@ -7,9 +7,7 @@ In global section:
 #include <eepromVar.h>
 // All these variables get whatever value is in EEPROM
 eepromVar<int> counter;
-eepromVar<byte> ledState;
 eepromVar<byte> triesNumber;
-eepromVar<uint32_t> key(12);
 eeprom<uint16_t> elevation[10];
 
 ```
@@ -22,13 +20,15 @@ counter++; // The change is written to EEPROM
 for (byte i=0;i<triesNumber;i++) {
 	// Try something
 }
-Serial.print(elevation[5]);
 // we can use elevation[0] - elevation[9]
+Serial.print(elevation[5]);
+
 elevation[5]=100;
 elevation[5]++;
+--elevation[6];
 ....
 // Set all values to 0
-for (int i=0;i<5;i++) elevation[i]=0;
+for (int i=0;i<10;i++) elevation[i]=0;
 
 ```
 ### Installation
@@ -57,4 +57,6 @@ it uses. sizeof(var) returns the RAM usage, and NOT the RAM  of the type it hold
 - The actual value of such a variable is also cached in RAM. This means faster reads
 but every variable uses additional RAM. This behaviour is probably going to change.
 - Do no try to change the eepromVar values by direct EEPROM manipulations.
+- If you feel a eepromVar looks like a normal variable more than it should
+you can prefix it with something meaningful like **nv_elevation** (non volatile)
 
