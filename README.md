@@ -67,7 +67,7 @@ you can prefix it with something meaningful like **nv_elevation** (nv = non vola
 ### Guard variabe
 
 This fragment of code inside setup() contains all the eepromVar variables we need
-```
+```C++
 #define MAGIC_VALUE 12345
 if (eeprom_guard!=MAGIC_VALUE) {
     PRINTLN("WARNING: eepromVariables set to 0")
