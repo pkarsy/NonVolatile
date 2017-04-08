@@ -1,11 +1,12 @@
 /*
  *
- * Copyright 2016 Panagiotis Karagiannis
+ * Copyright 2017 Panagiotis Karagiannis
  * eepromVar library: persistent (on EEPROM) Arduino variables
  * 
  * This code is licenced under the
  * Apache License 2.0
  *
+ * This file is part of the eepromVar library
  * Project site
  * https://github.com/pkarsy/eepromVar
  *
@@ -78,10 +79,10 @@ class eepromVar {
 		return *this;
 	}
 
-	T operator ++(int) { // postfix v++
+	T operator ++(int) {		// postfix v++
 		T val = ram_value; 		// make a copy of the old value
         ++(*this);              // Now use the prefix version to do the work        
-		return val; // return the copy (the old) value.
+		return val;				// return the copy (the old) value.
 	}
 
 	eepromVar & operator --() { // prefix --v
@@ -90,7 +91,7 @@ class eepromVar {
 		return *this;
 	}
 	
-	T operator --(int) { // postfix v--
+	T operator --(int) {		// postfix v--
 		T val = ram_value; 		// make a copy for result
         --(*this);              // Now use the prefix version to do the work
 		return val;				// return the copy (the old) value.
