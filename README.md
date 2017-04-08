@@ -46,7 +46,8 @@ will wear soon (about 100000 writes).
 - **You must declare them as global variables.** The eeprom location is
 determined at runtime. If they are local, they point to differnet EEPROM
 location every time.
-Declare all of them one after another, like the example above.
+Declare all of them one after another, like the example above. And of course change the
+order only if you are going to reset the values
 - In contrast with normal global variables, they are not get 0 at boot.
 This is the purpose of their existence.
 - In contrast with avr-libc EEMEM variables they are not updated with
@@ -61,5 +62,24 @@ it uses. sizeof(var) returns the RAM usage, and NOT the RAM  of the type it hold
 but every variable uses additional RAM. This behaviour is probably going to change.
 - Do no try to change the eepromVar values by direct EEPROM manipulations.
 - If you feel a eepromVar looks like a normal variable more than it should
-you can prefix it with something meaningful like **nv_elevation** (non volatile)
+you can prefix it with something meaningful like **nv_elevation** (nv = non volatile)
 
+### Guard variabe
+
+This fragment of code inside setup() contains all the eepromVar variables we need
+```
+#define MAGIC_VALUE 12345
+if (eeprom_guard!=MAGIC_VALUE) {
+    PRINTLN("WARNING: eepromVariables set to 0")
+    counter=0;
+    longvar=0;
+    for (int i=0;i<5;i++) arr[i]=0;
+    float1=0;
+    float2=0;
+    eeprom_guard=MAGIC_VALUE;
+}
+
+```
+and runs only once. If we change the declarations, most likely
+the code will run again (due to eeprom_guard misaligment) but
+to be sure we can change the MAGIC_VALUE to 1234.
