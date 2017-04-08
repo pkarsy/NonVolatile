@@ -1,6 +1,6 @@
 # eepromVar
 Arduino persistent numeric variables. They can be used just like
-normal variables, but their value is stored in EEPROM
+normal variables, but underneath all changes are saved to EEPROM
 
 In global section:
 ```C++
