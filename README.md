@@ -12,9 +12,10 @@ eeprom<uint16_t> elevation[10];
 
 ```
 Now in the code
+
 ```C++
 
-// ++ -- += -= *= /= etc are supported
+// = ++v v++ --v v-- += -= *= /= etc are supported
 counter++; // The change is written to EEPROM
 
 for (byte i=0;i<triesNumber;i++) {
@@ -83,4 +84,5 @@ if (eeprom_guard!=MAGIC_VALUE) {
 and runs only once. If we change the declarations, most likely
 the code will run again (due to eeprom_guard misaligment) but
 to be sure we can change the MAGIC_VALUE to 1234. See the
-[example]()
+[example](https://github.com/pkarsy/eepromVar/blob/master/example/exampleAndTest.ino)
+
