@@ -26,6 +26,8 @@ for (byte i=0;i<triesNumber;i++) {
 Serial.print(elevation[5]);
 
 elevation[5]=100;
+// The changes are not saved again to reduce EEPROM wear
+elevation[5]=100;
 elevation[5]++;
 --elevation[6];
 ....
