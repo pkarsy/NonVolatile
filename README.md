@@ -52,8 +52,8 @@ will wear soon (about 100000 writes).
 - **You must declare them as global variables.** The eeprom location is
 determined at runtime. If they are local, they point to elevated EEPROM
 location every time. **There is no boundary check in the code**.
-Declare all of them one after another, like the example above. And of course change the
-order only if you are going to reset the values.
+Declare all of them one after another, like the example above. And of course **change the
+order only if you are going to reset the values.**
 - In contrast to normal global variables, they are not get 0 at boot.
 This is the purpose of their existence.
 - In contrast with avr-libc EEMEM variables they are not updated with

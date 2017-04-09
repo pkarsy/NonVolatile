@@ -13,14 +13,16 @@
 */
 
 
-// The eeprom_idx is global and points to the EEPROM location
+// The eeprom_idx points to the EEPROM location
 // of the next nonVolatile to be declared
 #include <avr/eeprom.h>
+namespace NONVOL {
 #ifdef EEPROM_START
 static byte* eeprom_idx=(byte*)EEPROM_START;
 #else
 static byte* eeprom_idx;
 #endif
+}
 
 template <typename T>
 class nonVolatile {
@@ -36,9 +38,9 @@ class nonVolatile {
 	public:
 	
 	nonVolatile() {
-		address = eeprom_idx;
+		address = NONVOL::eeprom_idx;
 		eeprom_read_block(&ram_value, (byte*)address, sizeof(T) );
-		eeprom_idx+=sizeof(T);
+		NONVOL::eeprom_idx+=sizeof(T);
 	}
 
 	operator T() const { return ram_value; }

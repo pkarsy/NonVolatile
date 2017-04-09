@@ -1,12 +1,16 @@
-// Uncomment to set another location for nonVolatile variables
+// Uncomment to set another starting location for nonVolatile variables
 // #define EEPROM_START 100
 
 #include <nonVolatile.h>
 
-nonVolatile<int> counter; // Uses EEPROM location 0-1 (2 bytes)
-nonVolatile<long> longvar; // Uses EEPROM location 2-5 (4 bytes)
+// Only global definitions allowed
+// Ok global variables are a bad thing
+// but do not try to enforce this on nonVolatile
+
+nonVolatile<int> counter; // Uses EEPROM location 0-1 (2 EEPROM bytes)
+nonVolatile<long> longvar; // Uses EEPROM location 2-5 (4 EEPROM bytes)
 // Change "long" to "int" to see the eeprom locations to change
-nonVolatile<long> arr[5]; // Uses EEPROM locations 6-25 (1 byte)
+nonVolatile<long> arr[5]; // Uses EEPROM locations 6-25 (20 EEPROM bytes)
 nonVolatile<float> float1;
 nonVolatile<float> float2;
 nonVolatile<unsigned long> eeprom_guard;
@@ -68,11 +72,14 @@ void setup() {
 		PRINT("eeprom_guard.addr()=");Serial.println(eeprom_guard.addr());
 		PRINT("sizeof(longvar)=");Serial.println(sizeof(longvar));
 		PRINT("For comparison sizeof(long)=");Serial.println(sizeof(long));
-		PRINT("sizeof(arr)=");Serial.println(sizeof(arr));
+		PRINT("sizeof(arr)=");Serial.print(sizeof(arr));PRINTLN(" bytes of RAM");
 	}
 }
 
 void loop() {
 	// Never declare nonVolatile variables with local scope
 	// not even static variables
+	// nonVolatile<int> i; // BAD
+	// Serial.println(i.addr());
+	delay(500);
 }
