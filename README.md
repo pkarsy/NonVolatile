@@ -63,7 +63,7 @@ a "guard" variable (see below).
 code.
 - Every nonVolatile variable eats some RAM, in addition to the EEPROM space
 it uses. sizeof(var) returns the RAM usage, and NOT the RAM  of the type it holds.
-- Do not change the nonVolatile locations by direct EEPROM manipulations.
+- Do not change nonVolatile variables by direct EEPROM manipulations.
 - If you feel a nonVolatile looks like a normal variable more than it should,
 you can prefix it with something meaningful like **nv_elevation**
 - Large arrays are RAM hungry. sizeof(arr) gives the RAM they use.
