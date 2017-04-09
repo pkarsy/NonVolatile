@@ -59,7 +59,7 @@ This is the purpose of their existence.
 - In contrast with avr-libc EEMEM variables they are not updated with
 code upload. If the initial value is important (and usually is) you can use
 a "guard" variable (see below).
-- Reading an nonVolatile variable should be fast, but writing is slow
+- Reading a nonVolatile should be fast, but writing is slow
 (about 3ms/byte), due to EEPROM write. This can be important in time critical
 code.
 - Every nonVolatile variable eats some RAM, in addition to the EEPROM space it uses.
