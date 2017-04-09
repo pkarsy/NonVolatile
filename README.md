@@ -1,12 +1,13 @@
 # nonVolatile
-Arduino persistent numeric variables. They can be used just like
-normal variables, but underneath all changes are saved to EEPROM
+Arduino persistent numeric variables. They can be used like
+global variables, but underneath all changes are saved to EEPROM
 
 In global section:
 
 ```C++
 #include <nonVolatile.h>
 
+// WARNING : nonVolatile can only be GLOBAL variables
 nonVolatile<int> counter;           // Uses EEPROM addrees 0-1
 nonVolatile<byte> triesNumber;      // Uses address 2
 nonVolatile<uint16_t> elevation[10];   // Uses address 3-22
@@ -49,8 +50,8 @@ below.
 - **You must make sure you are not modify them too often** or the EEPROM
 will wear soon (about 100000 writes).
 - **You must declare them as global variables.** The eeprom location is
-determined at runtime. If they are local, they point to different EEPROM
-location every time.
+determined at runtime. If they are local, they point to elevated EEPROM
+location every time. **There is no boundary check in the code**.
 Declare all of them one after another, like the example above. And of course change the
 order only if you are going to reset the values.
 - In contrast to normal global variables, they are not get 0 at boot.
@@ -61,8 +62,8 @@ a "guard" variable (see below).
 - Reading an nonVolatile variable should be fast, but writing is slow
 (about 3ms/byte), due to EEPROM write. This can be important in time critical
 code.
-- Every nonVolatile variable eats some RAM, in addition to the EEPROM space
-it uses. sizeof(var) returns the RAM usage, and NOT the RAM  of the type it holds.
+- Every nonVolatile variable eats some RAM, in addition to the EEPROM space it uses.
+sizeof(var) returns the RAM usage of the object, and not the RAM of the basetype.
 - Do not change nonVolatile variables by direct EEPROM manipulations.
 - If you feel a nonVolatile looks like a normal variable more than it should,
 you can prefix it with something meaningful like **nv_elevation**
