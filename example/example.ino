@@ -1,24 +1,23 @@
-// Uncomment to set another location for eepromVar variables
-// #define EEPROMVAR_START 100
+// Uncomment to set another location for nonVolatile variables
+// #define EEPROM_START 100
 
-#include <eepromVar.h>
+#include <nonVolatile.h>
 
-eepromVar<int> counter; // Uses EEPROM location 0-1 (2 bytes)
-eepromVar<long> longvar; // Uses EEPROM location 2-5 (4 bytes)
+nonVolatile<int> counter; // Uses EEPROM location 0-1 (2 bytes)
+nonVolatile<long> longvar; // Uses EEPROM location 2-5 (4 bytes)
 // Change "long" to "int" to see the eeprom locations to change
-eepromVar<long> arr[5]; // Uses EEPROM locations 6-25 (1 byte)
-eepromVar<float> float1;
-eepromVar<float> float2;
-eepromVar<unsigned long> eeprom_guard;
+nonVolatile<long> arr[5]; // Uses EEPROM locations 6-25 (1 byte)
+nonVolatile<float> float1;
+nonVolatile<float> float2;
+nonVolatile<unsigned long> eeprom_guard;
 
 #define PRINT(x) Serial.print(F(x));
 #define PRINTLN(x) Serial.println(F(x));
 
-
 void setup() {
 	Serial.begin(57600);
 	
-	Serial.println(F("############# eepromVar tests ###############"));
+	Serial.println(F("############# nonVolatile tests ###############"));
 	Serial.println(F("##### The values persist between resets #####"));
 	
 	// This code runs at first upload
@@ -44,7 +43,7 @@ void setup() {
 	float1+=0.2;
 	PRINT("float1="); Serial.println(float1);
 	{
-		// Never declare eepromVar variables with local scope
+		// Never declare nonVolatile variables with local scope
 		// not even static variables
 		// The eeprom location is determined at runtime
 		// and an automatic variable will point to different
@@ -53,7 +52,7 @@ void setup() {
 
 	// Change to false to hide addresses report
 	if (true) {
-		PRINTLN("Any change in eepromVar declarations can change the addresses");
+		PRINTLN("Any change in nonVolatile declarations can change the addresses");
 		PRINT("counter.addr()=");Serial.println(counter.addr());
 		PRINT("longvar.addr()=");Serial.println(longvar.addr());
 		
@@ -74,6 +73,6 @@ void setup() {
 }
 
 void loop() {
-	// Never declare eepromVar variables with local scope
+	// Never declare nonVolatile variables with local scope
 	// not even static variables
 }
