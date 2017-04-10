@@ -1,5 +1,5 @@
 # nonVolatile
-Arduino persistent numeric variables. They can be used like
+Arduino persistent variables. They can be used like
 global variables, but underneath all changes are saved to EEPROM
 
 In global section:
@@ -12,7 +12,7 @@ nonVolatile<int> elevation[10];     // Uses addresses 3-22
 ```
 Now in the code
 ```C++
-// = ++v v++ --v v-- += -= *= /= etc are supported
+// = ++v v++ --v v-- += -= *= /= etc are supported, chaining non tested
 counter++; // The change is written to EEPROM
 elevation[5]=100; // Immediatelly writen to EEPROM
 elevation[5]=100; // The changes are NOT saved again to reduce EEPROM wear
@@ -40,9 +40,8 @@ like the example above.
 - The location in EEPROM is determined at runtime. **If the order of the
 declarations change, the values of nonVolatile variables
 can change to different and unexpected values.** If you change the order
-during development, you must also reset all nonVolatile variable. See
+during development, you must also reset all nonVolatile variables. See
 "guard variable" below.
-reset the values.
 - **You must make sure you are not modify them too often** or the EEPROM
 will wear soon (about 100000 writes). 
 - In contrast to normal global variables, they are not get 0 at boot.
