@@ -36,27 +36,28 @@ perhaps too much, there are some things to keep in mind:
 determined at runtime. If they are local, they point to elevated EEPROM
 location every time. **There are no boundary checks in the code**.
 Declare all of them one after another,
-like the example above. And of course **change the
-order only if you are going to reset the values.**
+like the example above.
 - The location in EEPROM is determined at runtime. **If the order of the
 declarations change, the values of nonVolatile variables
-can change to different and unexpected values.** For a solution see "guard variable"
-below.
+can change to different and unexpected values.** For a solution see "guard
+variable" below. And of course change the order only if you are going to
+reset the values.
 - **You must make sure you are not modify them too often** or the EEPROM
 will wear soon (about 100000 writes). 
 - In contrast to normal global variables, they are not get 0 at boot.
 This is the purpose of their existence.
 - In contrast with avr-libc EEMEM variables they are not updated with
-code upload. If the initial value is important (and usually is) you can use
-a "guard" variable (see below).
+code upload. If the initial value is important (and usually is) you can
+use a "guard" variable (see below).
 - Reading a nonVolatile should be fast, but writing is slow
-(about 3ms/byte), due to EEPROM write. This can be important in time critical
-code.
-- Every nonVolatile variable eats some RAM, in addition to the EEPROM space it uses.
-sizeof(var) returns the RAM usage of the object, and not the RAM of the basetype.
+(about 3ms/byte), due to EEPROM write. This can be important in time
+critical code.
+- Every nonVolatile variable eats some RAM, in addition to the EEPROM space
+it uses. sizeof(var) returns the RAM usage of the object, and not the RAM of
+the basetype.
 - Do not change nonVolatile variables by direct EEPROM manipulations.
-- If you feel a nonVolatile looks like a normal variable more than it should,
-you can prefix it with something meaningful like **nv_elevation**
+- If you feel a nonVolatile looks like a normal variable more than it
+should, you can prefix it with something meaningful like **nv_elevation**
 - Large arrays are RAM hungry. sizeof(arr) gives the RAM they use.
 
 ### Guard variabe
