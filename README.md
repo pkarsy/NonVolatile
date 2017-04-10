@@ -6,34 +6,19 @@ In global section:
 
 ```C++
 #include <nonVolatile.h>
-
 // WARNING : nonVolatile can only be GLOBAL variables
 nonVolatile<uint16_t> counter;      // Uses EEPROM addreeses 0-1
-nonVolatile<byte> triesNumber;      // Uses address 2
 nonVolatile<int> elevation[10];     // Uses addresses 3-22
-
 ```
 Now in the code
-
 ```C++
-
 // = ++v v++ --v v-- += -= *= /= etc are supported
 counter++; // The change is written to EEPROM
-
-for (byte i=0;i<triesNumber;i++) {
-    // Try something
-}
-// we can use elevation[0] - elevation[9]
-Serial.print(elevation[5]);
-
 elevation[5]=100; // Immediatelly writen to EEPROM
-elevation[5]=100; // The changes are not saved again to reduce EEPROM wear
+elevation[5]=100; // The changes are NOT saved again to reduce EEPROM wear
 elevation[5]++;   // postfix
---elevation[6];   // prefix
-....
-// Set all values to 0
-for (int i=0;i<10;i++) elevation[i]=0;
-
+Serial.print(--elevation[5]); // prefix
+for (int i=0;i<10;i++) elevation[i]=0;    // Set all values to 0
 ```
 ### Installation
 Put the directory "nonVolatile" in the Arduino "libraries" location.
