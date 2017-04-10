@@ -92,3 +92,9 @@ to be sure we can change the MAGIC_VALUE to 12340.
 Note that "eeprom_guard" must be itself an nonVolatile. See the
 [example](https://github.com/pkarsy/nonVolatile/blob/master/example/example.ino)
 
+### Intended use
+nonVolatile has a very limited purpose. To make it easier to store the (usually) very few
+settings an Arduino project needs. If there is need to use a significant percentage of the
+EEPROM, you have to use another method.
+
+
