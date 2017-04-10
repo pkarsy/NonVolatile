@@ -39,8 +39,9 @@ Declare all of them one after another,
 like the example above.
 - The location in EEPROM is determined at runtime. **If the order of the
 declarations change, the values of nonVolatile variables
-can change to different and unexpected values.** For a solution see "guard
-variable" below. And of course change the order only if you are going to
+can change to different and unexpected values.** If you change the order
+during development, you must also reset all nonVolatile variable. See
+"guard variable" below.
 reset the values.
 - **You must make sure you are not modify them too often** or the EEPROM
 will wear soon (about 100000 writes). 
