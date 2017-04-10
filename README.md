@@ -8,9 +8,9 @@ In global section:
 #include <nonVolatile.h>
 
 // WARNING : nonVolatile can only be GLOBAL variables
-nonVolatile<uint16_t> counter;           // Uses EEPROM addreeses 0-1
+nonVolatile<uint16_t> counter;      // Uses EEPROM addreeses 0-1
 nonVolatile<byte> triesNumber;      // Uses address 2
-nonVolatile<int> elevation[10];   // Uses addresses 3-22
+nonVolatile<int> elevation[10];     // Uses addresses 3-22
 
 ```
 Now in the code
@@ -21,7 +21,7 @@ Now in the code
 counter++; // The change is written to EEPROM
 
 for (byte i=0;i<triesNumber;i++) {
-	// Try something
+    // Try something
 }
 // we can use elevation[0] - elevation[9]
 Serial.print(elevation[5]);
@@ -38,6 +38,11 @@ for (int i=0;i<10;i++) elevation[i]=0;
 ### Installation
 Put the directory "nonVolatile" in the Arduino "libraries" location.
 Or you can put the "nonVolatile.h" file in the same location as the .ino file
+
+### Intended use
+nonVolatile has a very limited purpose. To make it easier to store the (usually) very few
+settings an Arduino project needs. It is unsuitable for data logging. Generally if there
+is a need to use a significant percentage of the EEPROM, you have to use another method.
 
 ### Caveats
 Although nonVolatile variables look and feel just like normal variables,
@@ -91,9 +96,5 @@ to be sure we can change the MAGIC_VALUE to 12340.
 Note that "eeprom_guard" must be itself an nonVolatile. See the
 [example](https://github.com/pkarsy/nonVolatile/blob/master/example/example.ino)
 
-### Intended use
-nonVolatile has a very limited purpose. To make it easier to store the (usually) very few
-settings an Arduino project needs. If there is need to use a significant percentage of the
-EEPROM, you have to use another method.
 
 
