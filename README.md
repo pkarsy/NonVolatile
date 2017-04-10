@@ -8,9 +8,9 @@ In global section:
 #include <nonVolatile.h>
 
 // WARNING : nonVolatile can only be GLOBAL variables
-nonVolatile<int> counter;           // Uses EEPROM addrees 0-1
+nonVolatile<uint16_t> counter;           // Uses EEPROM addreeses 0-1
 nonVolatile<byte> triesNumber;      // Uses address 2
-nonVolatile<uint16_t> elevation[10];   // Uses address 3-22
+nonVolatile<int> elevation[10];   // Uses addresses 3-22
 
 ```
 Now in the code
@@ -27,10 +27,9 @@ for (byte i=0;i<triesNumber;i++) {
 Serial.print(elevation[5]);
 
 elevation[5]=100; // Immediatelly writen to EEPROM
-
 elevation[5]=100; // The changes are not saved again to reduce EEPROM wear
-elevation[5]++; // postfix
---elevation[6]; // prefix
+elevation[5]++;   // postfix
+--elevation[6];   // prefix
 ....
 // Set all values to 0
 for (int i=0;i<10;i++) elevation[i]=0;

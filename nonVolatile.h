@@ -26,81 +26,81 @@ static byte* eeprom_idx;
 
 template <typename T>
 class nonVolatile {
-	private:
-	
-	T ram_value;
-	byte* address;
+    private:
+    
+    T ram_value;
+    byte* address;
 
-	void update_eeprom() {
-		eeprom_update_block( &ram_value, address, sizeof(T) );
-	}
+    void update_eeprom() {
+        eeprom_update_block( &ram_value, address, sizeof(T) );
+    }
 
-	public:
-	
-	nonVolatile() {
-		address = NONVOL::eeprom_idx;
-		eeprom_read_block(&ram_value, (byte*)address, sizeof(T) );
-		NONVOL::eeprom_idx+=sizeof(T);
-	}
+    public:
+    
+    nonVolatile() {
+        address = NONVOL::eeprom_idx;
+        eeprom_read_block(&ram_value, (byte*)address, sizeof(T) );
+        NONVOL::eeprom_idx+=sizeof(T);
+    }
 
-	operator T() const { return ram_value; }
+    operator T() const { return ram_value; }
 
-	nonVolatile & operator = (T v) {
-		ram_value=v;
-		update_eeprom();
-		return *this;
-	}
+    nonVolatile & operator = (T v) {
+        ram_value=v;
+        update_eeprom();
+        return *this;
+    }
 
-	nonVolatile & operator -= (T v) {
-		ram_value -= v;
-		update_eeprom();
-		return *this;
-	}
+    nonVolatile & operator -= (T v) {
+        ram_value -= v;
+        update_eeprom();
+        return *this;
+    }
 
-	nonVolatile & operator += (T v) {
-		ram_value += v;
-		update_eeprom();
-		return *this;
-	}
+    nonVolatile & operator += (T v) {
+        ram_value += v;
+        update_eeprom();
+        return *this;
+    }
 
-	nonVolatile & operator *= (T v) {
-		ram_value *= v;
-		update_eeprom();
-		return *this;
-	}
+    nonVolatile & operator *= (T v) {
+        ram_value *= v;
+        update_eeprom();
+        return *this;
+    }
 
-	nonVolatile & operator /= (T v) {
-		ram_value /= v;
-		update_eeprom();
-		return *this;
-	}
+    nonVolatile & operator /= (T v) {
+        ram_value /= v;
+        update_eeprom();
+        return *this;
+    }
 
-	nonVolatile & operator ++() { // prefix ++v
-		ram_value ++;
-		update_eeprom();
-		return *this;
-	}
+    nonVolatile & operator ++() { // prefix ++v
+        ram_value ++;
+        update_eeprom();
+        return *this;
+    }
 
-	T operator ++(int) {		// postfix v++
-		T val = ram_value; 		// make a copy of the old value
+    T operator ++(int) {        // postfix v++
+        T val = ram_value;      // make a copy of the old value
         ++(*this);              // Now use the prefix version to do the work        
-		return val;				// return the copy (the old) value.
-	}
+        return val;             // return the copy (the old) value.
+    }
 
-	nonVolatile & operator --() { // prefix --v
-		ram_value --;
-		update_eeprom();
-		return *this;
-	}
-	
-	T operator --(int) {		// postfix v--
-		T val = ram_value; 		// make a copy for result
+    nonVolatile & operator --() { // prefix --v
+        ram_value --;
+        update_eeprom();
+        return *this;
+    }
+    
+    T operator --(int) {        // postfix v--
+        T val = ram_value;      // make a copy for result
         --(*this);              // Now use the prefix version to do the work
-		return val;				// return the copy (the old) value.
-	}
+        return val;             // return the copy (the old) value.
+    }
 
-	size_t addr() {
-		return size_t(address);
-	}
+    size_t addr() {
+        return size_t(address);
+    }
 };
 
