@@ -25,24 +25,25 @@ Put the directory "nonVolatile" in the Arduino "libraries" location.
 Or you can put the "nonVolatile.h" file in the same location as the .ino file
 
 ### Intended use
-nonVolatile has a very limited purpose. To make it easier to store the (usually) very few
+nonVolatile has a very specific purpose. To make it easier to store the (usually) very few
 settings an Arduino project needs. It is unsuitable for data logging. Generally if there
 is a need to use a significant percentage of the EEPROM, you have to use another method.
 
 ### Caveats
 Although nonVolatile variables look and feel just like normal variables,
 perhaps too much, there are some things to keep in mind:
-- The location in EEPROM is determined at runtime. If the order of the
-declarations change, in the next upload, the values of nonVolatile variables
-can change to different and unexpected values. For a solution see "guard variable"
-below.
-- **You must make sure you are not modify them too often** or the EEPROM
-will wear soon (about 100000 writes).
 - **You must declare them as global variables.** The eeprom location is
 determined at runtime. If they are local, they point to elevated EEPROM
 location every time. **There are no boundary checks in the code**.
-Declare all of them one after another, like the example above. And of course **change the
+Declare all of them one after another,
+like the example above. And of course **change the
 order only if you are going to reset the values.**
+- The location in EEPROM is determined at runtime. **If the order of the
+declarations change, the values of nonVolatile variables
+can change to different and unexpected values.** For a solution see "guard variable"
+below.
+- **You must make sure you are not modify them too often** or the EEPROM
+will wear soon (about 100000 writes). 
 - In contrast to normal global variables, they are not get 0 at boot.
 This is the purpose of their existence.
 - In contrast with avr-libc EEMEM variables they are not updated with
