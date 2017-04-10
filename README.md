@@ -18,7 +18,7 @@ elevation[5]=100; // Immediatelly writen to EEPROM
 elevation[5]=100; // The changes are NOT saved again to reduce EEPROM wear
 elevation[5]++;   // postfix
 Serial.print(--elevation[5]); // prefix
-for (int i=0;i<10;i++) elevation[i]=0;    // Set all values to 0
+for (int i=0;i<10;i++) elevation[i]=0;
 ```
 ### Installation
 Put the directory "nonVolatile" in the Arduino "libraries" location.
