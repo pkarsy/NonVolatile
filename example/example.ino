@@ -1,4 +1,4 @@
-// Uncomment to set another starting location for nonVolatile variables
+// Uncomment to set a non zero starting location for nonVolatile variables
 // #define EEPROM_START 100
 
 #include <nonVolatile.h>
