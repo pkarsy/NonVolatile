@@ -26,7 +26,6 @@ void setup() {
     
     // This code runs at first upload
     // or when tha MAGIC_VALUE changes
-    // this is recommended if you change the declarations
     #define MAGIC_VALUE 12345
     if (eeprom_guard!=MAGIC_VALUE) {
         PRINTLN("WARNING: eepromVariables set to 0")
@@ -50,7 +49,7 @@ void setup() {
         // Never declare nonVolatile variables with local scope
         // not even static variables
         // The eeprom location is determined at runtime
-        // and an automatic variable will point to different
+        // and an automatic variable will point to different (elevated)
         // eeprom location every time 
     }
 
@@ -79,7 +78,7 @@ void setup() {
 void loop() {
     // Never declare nonVolatile variables with local scope
     // not even static variables
-    // nonVolatile<int> i; // VERY BAD
+    // nonVolatile<int> i; // VERY BAD !
     // Serial.println(i.addr());
     delay(500);
 }
