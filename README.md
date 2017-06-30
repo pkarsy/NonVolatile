@@ -60,6 +60,7 @@ the basetype.
 should, you can prefix it with something meaningful like **nv_elevation**
 - Large arrays are RAM hungry. sizeof(arr) gives the RAM they use.
 
+
 ### Guard variabe
 
 This fragment of code inside setup() contains all the NonVolatile variables we need
