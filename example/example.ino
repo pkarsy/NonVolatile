@@ -1,11 +1,12 @@
-// Uncomment to set another starting location for NonVolatile variables
+
+// Uncomment to set non zero starting EEPROM location for NonVolatile variables
 // #define EEPROM_START 100
 
 #include <NonVolatile.h>
 
 // Only global definitions allowed
-// Ok global variables are a bad thing
-// but do not try to enforce this on NonVolatile
+// Ok global variables are a BAD thing
+// but do not try to enforce this on NonVolatile variables
 
 NonVolatile<int> counter; // Uses EEPROM location 0-1 (2 EEPROM bytes)
 NonVolatile<long> longvar; // Uses EEPROM location 2-5 (4 EEPROM bytes)
@@ -26,7 +27,6 @@ void setup() {
 
     // This code runs at first upload
     // or when tha MAGIC_VALUE changes
-    // this is recommended if you change the declarations
     #define MAGIC_VALUE 12345
     if (eeprom_guard!=MAGIC_VALUE) {
         PRINTLN("NonVolatile variables set to 0")
@@ -50,7 +50,7 @@ void setup() {
         // Never declare NonVolatile variables with local scope
         // not even static variables
         // The eeprom location is determined at runtime
-        // and an automatic variable will point to different
+        // and an automatic variable will point to different (elevated)
         // eeprom location every time
     }
 
@@ -79,7 +79,7 @@ void setup() {
 void loop() {
     // Never declare NonVolatile variables with local scope
     // not even static variables
-    // NonVolatile<int> i; // VERY BAD
+    // NonVolatile<int> i; // VERY BAD !
     // Serial.println(i.addr());
     delay(500);
 }
