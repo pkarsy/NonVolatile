@@ -67,7 +67,7 @@ This fragment of code inside setup() contains all the NonVolatile variables we n
 ```C++
 #define MAGIC_VALUE 12345
 if (eeprom_guard!=MAGIC_VALUE) {
-    PRINTLN("Variables set to 0")
+    // NonVolatile variables are set to 0
     counter=0;
     longvar=0;
     for (int i=0;i<5;i++) arr[i]=0;
