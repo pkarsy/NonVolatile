@@ -1,10 +1,10 @@
 
-// Uncomment to set non zero starting EEPROM location for NonVolatile variables
+// Uncomment to set a non zero starting EEPROM location for NonVolatile variables
 // #define EEPROM_START 100
 
 #include <NonVolatile.h>
 
-// Only global definitions allowed
+// Only global definitions are allowed
 // Ok global variables are a BAD thing
 // but do not try to enforce this on NonVolatile variables
 
@@ -16,14 +16,15 @@ NonVolatile<float> float1;
 NonVolatile<float> float2;
 NonVolatile<unsigned long> eeprom_guard;
 
+// These macros are for convenience, to avoid tedious Serial.print(F("message"));
 #define PRINT(x) Serial.print(F(x));
 #define PRINTLN(x) Serial.println(F(x));
 
 void setup() {
     Serial.begin(57600);
 
-    Serial.println(F("############# NonVolatile tests ###############"));
-    Serial.println(F("##### The values persist between resets #####"));
+    PRINTLN("############# NonVolatile tests ###############");
+    PRINTLN("##### The values persist between resets #####");
 
     // This code runs at first upload
     // or when tha MAGIC_VALUE changes
@@ -63,7 +64,7 @@ void setup() {
         PRINT("arr[] EEPROM addresses=[");
         for (int i=0;i<5;i++) {
             Serial.print(arr[i].addr());
-            Serial.print(" ");
+            PRINT(" ");
         }
         PRINTLN("]");
 
