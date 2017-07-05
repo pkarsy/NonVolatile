@@ -12,8 +12,10 @@ NonVolatile<int> counter; // Uses EEPROM location 0-1 (2 EEPROM bytes)
 NonVolatile<long> longvar; // Uses EEPROM location 2-5 (4 EEPROM bytes)
 // Change "long" to "int" to see how eeprom locations change
 NonVolatile<long> arr[5]; // Uses EEPROM locations 6-25 (20 EEPROM bytes)
-NonVolatile<float> float1;
-NonVolatile<float> float2;
+// EEPROM address 26-99 are not used. This can be usefull if you plan to add NonVolatile
+// variables later
+NonVolatile<float> float1(100);  // The 100 means it uses EEPROM address 100-103 (8bit AVR floats are 4bytes)
+NonVolatile<float> float2; // Address 104-107
 NonVolatile<unsigned long> eeprom_guard;
 
 // These macros are for convenience, to avoid tedious Serial.print(F("message"));
