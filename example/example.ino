@@ -1,6 +1,4 @@
 
-// Uncomment to set a non zero starting EEPROM location for NonVolatile variables
-// #define EEPROM_START 100
 
 #include <NonVolatile.h>
 
@@ -12,10 +10,15 @@ NonVolatile<int> counter; // Uses EEPROM location 0-1 (2 EEPROM bytes)
 NonVolatile<long> longvar; // Uses EEPROM location 2-5 (4 EEPROM bytes)
 // Change "long" to "int" to see how eeprom locations change
 NonVolatile<long> arr[5]; // Uses EEPROM locations 6-25 (20 EEPROM bytes)
+
 // EEPROM address 26-99 are not used. This can be usefull if you plan to add NonVolatile
-// variables later
-NonVolatile<float> float1(100);  // The 100 means it uses EEPROM address 100-103 (8bit AVR floats are 4bytes)
-NonVolatile<float> float2; // Address 104-107
+// variables later, in the first group of variables.
+
+// The 100 means the next NonVolatile variable will use EEPROM address 100
+// The "new_eeprom_address" object is just a syntactic artifact and is not used anywhere.
+NonVolatileAddress new_eeprom_address(100);
+NonVolatile<float> float1; // it uses EEPROM address 100-103 (8bit AVR floats are 4bytes)
+NonVolatile<float> float2; // Address 104-107.
 NonVolatile<unsigned long> eeprom_guard;
 
 // These macros are for convenience, to avoid tedious Serial.print(F("message"));

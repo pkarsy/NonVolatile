@@ -24,6 +24,16 @@ static byte* non_volatile_idx;
 //#endif
 //}
 
+class NonVolatileAddress
+{
+    //protected:
+    //static byte* non_volatile_idx;
+    public:
+    NonVolatileAddress(const unsigned int new_addr) {
+        non_volatile_idx = (byte*)new_addr;
+    }
+};
+
 template <typename T>
 class NonVolatile {
     private:
@@ -43,11 +53,11 @@ class NonVolatile {
         non_volatile_idx+=sizeof(T);
     }
 
-    NonVolatile(const unsigned int new_addr) {
-        address = (byte*)new_addr;
-        eeprom_read_block(&ram_value, address, sizeof(T) ); // (byte*)
-        non_volatile_idx = (byte*)new_addr + sizeof(T);
-    }
+    //NonVolatile(const unsigned int new_addr) {
+    //    address = (byte*)new_addr;
+    //    eeprom_read_block(&ram_value, address, sizeof(T) ); // (byte*)
+    //    non_volatile_idx = (byte*)new_addr + sizeof(T);
+    //}
 
     operator T() const { return ram_value; }
 
