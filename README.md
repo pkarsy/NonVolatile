@@ -31,7 +31,7 @@ is a need to use a significant percentage of the EEPROM, you have to use another
 
 ### Caveats
 Although NvVar variables look and feel just like normal variables,
-perhaps too much, there are some things to keep in mind:
+there are some things to keep in mind:
 - **You must declare them as global variables.** The eeprom location is
 determined at runtime. If they are local, they point to elevated EEPROM
 location every time. **There are no boundary checks in the code**.
