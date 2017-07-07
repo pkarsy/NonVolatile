@@ -33,12 +33,13 @@ but spreads the writes across the N extra bytes doind EEPROM wear leveling. So i
 EEPROM cell withands 100000 writes, the counter can be incremented about 100000*N times.
 See NvCounter Example.
 
-The next 2 types are not variables but can be used to set the eeprom address used by the variables.
+The next 2 types are not variables but can be used to set the eeprom address used by the variables. Ususally they are
+not needed and can lead to hard to examine bugs, in case you set the EEPROM location wrong.
 
 - **NvAddress _dummy_var(addr)** Sets the EEPROM location of the next NonVolatile or NvCounter
-variable to **addr**
-- **NvSpace _dummy_var2(no_of_bytes)** Reserves some space in EEPROM, in case you need it for other purpose,
-or simply want to set the variables later without changing the location of the other variables.
+variable to **addr**. See example(TODO)
+- **NvSpace _dummy_var2(no_of_bytes)** Reserves some space in EEPROM, in case you need it for other purpose.
+The next defined variable, will point to the next byte after the reserved space. See example(TODO)
 
 ### Intended use
 NonVolatile has a very specific purpose. To make it easier to store the (usually) very few
