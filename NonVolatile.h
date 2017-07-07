@@ -160,7 +160,7 @@ class NvCounter {
         select = select%N;
         eeprom_read_block( &ram_value, address+1+select, sizeof(T) );
 
-        non_volatile_idx += (sizeof(T)+N+1);
+        non_volatile_idx += sizeof(T)+N;
 
     }
 
@@ -186,7 +186,7 @@ class NvCounter {
         return val;             // return the copy (the old) value.
     }
 
-    NvCounter & operator --() { // prefix --v
+    /* NvCounter & operator --() { // prefix --v
         ram_value --;
         update_eeprom();
         return *this;
@@ -196,6 +196,6 @@ class NvCounter {
         T val = ram_value;      // make a copy for result
         --(*this);              // Now use the prefix version to do the work
         return val;             // return the copy (the old) value.
-    }
+    } */
 
 };

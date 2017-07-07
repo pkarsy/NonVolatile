@@ -15,7 +15,7 @@ NonVolatile<long> arr[5]; // Uses EEPROM locations 6-25 (20 EEPROM bytes)
 // variables later, in the first group of variables.
 
 // The 100 means the next NonVolatile variable will use EEPROM address 100
-// The "new_eeprom_address" object is just a syntactic artifact and is not used anywhere.
+// The "new_eeprom_address" object is just a syntactic artifact, it is not consuming RAM and is not used anywhere.
 NvAddress new_eeprom_address(100);
 NonVolatile<float> float1; // it uses EEPROM address 100-103 (8bit AVR floats are 4bytes)
 NonVolatile<float> float2; // Address 104-107.

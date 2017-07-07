@@ -24,6 +24,21 @@ for (int i=0;i<10;i++) elevation[i]=0;
 Put the directory "NonVolatile" in the Arduino "libraries" location.
 Or you can put the "NonVolatile.h" file in the same location as the .ino file
 
+### Types
+- **NonVolatile<T>** The most importand type this library offers. <T> can be bool,char,int,long
+and the unsigned counterparts.
+- **NvCounter<T,N>** usually T is uint32_t(unsigned long). This special type
+is usefull only as counter (++ is the only operator working), and uses more EEPROM bytes
+but spreads the writes across the N extra bytes doind EEPROM wear leveling. So if every
+EEPROM cell withands 100000 writes, the counter can be incremented about 100000*N times.
+See NvCounter Example.
+
+The next 2 types are not variables but can be used to set the eeprom address used by the variables.
+
+- NvAddress _dummy_var(addr) Sets the EEPROM location of the next NonVolatile or NvCounter
+variable to addr.
+- NvSpace _dummy_var2(no_of_bytes)
+
 ### Intended use
 NonVolatile has a very specific purpose. To make it easier to store the (usually) very few
 settings an Arduino project needs. It is unsuitable for data logging. Generally if there
