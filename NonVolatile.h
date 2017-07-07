@@ -16,13 +16,8 @@
 // The non_volatile_idx points to the EEPROM location
 // of the next NonVolatile to be declared
 #include <avr/eeprom.h>
-//namespace NONVOL {
-//#ifdef EEPROM_START
-//static byte* non_volatile_idx=(byte*)EEPROM_START;
-//#else
 static byte* non_volatile_idx;
-//#endif
-//}
+
 
 // To keep some space reserved, in the declarations
 class NvSpace
@@ -37,8 +32,6 @@ class NvSpace
 // to set a new EEPROM location for NonVolatile
 class NvAddress
 {
-    //protected:
-    //static byte* non_volatile_idx;
     public:
     NvAddress(const unsigned int new_addr) {
         non_volatile_idx = (byte*)new_addr;
@@ -63,12 +56,6 @@ class NonVolatile {
         eeprom_read_block(&ram_value, (byte*)address, sizeof(T) );
         non_volatile_idx+=sizeof(T);
     }
-
-    //NonVolatile(const unsigned int new_addr) {
-    //    address = (byte*)new_addr;
-    //    eeprom_read_block(&ram_value, address, sizeof(T) ); // (byte*)
-    //    non_volatile_idx = (byte*)new_addr + sizeof(T);
-    //}
 
     operator T() const { return ram_value; }
 
@@ -131,8 +118,8 @@ class NonVolatile {
     }
 };
 
+// wear leveling counter
 // only for uint8_t uint16_t uint32_t
-// [ select=0 03 00 00 00 ex1 ex2 ex3 exN ] # N=4
 template <typename T, byte N>
 class NvCounter {
     private:
@@ -185,17 +172,4 @@ class NvCounter {
         ++(*this);              // Now use the prefix version to do the work
         return val;             // return the copy (the old) value.
     }
-
-    /* NvCounter & operator --() { // prefix --v
-        ram_value --;
-        update_eeprom();
-        return *this;
-    }
-
-    T operator --(int) {        // postfix v--
-        T val = ram_value;      // make a copy for result
-        --(*this);              // Now use the prefix version to do the work
-        return val;             // return the copy (the old) value.
-    } */
-
 };
