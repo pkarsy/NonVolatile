@@ -1,25 +1,25 @@
 
 
-#include <NvVar.h>
+#include <NonVolatile.h>
 
 // Only global definitions are allowed
 // Ok global variables are a BAD thing
-// but do not try to enforce this on NvVar variables
+// but do not try to enforce this on NonVolatile variables
 
-NvVar<int> counter; // Uses EEPROM location 0-1 (2 EEPROM bytes)
-NvVar<long> longvar; // Uses EEPROM location 2-5 (4 EEPROM bytes)
+NonVolatile<int> counter; // Uses EEPROM location 0-1 (2 EEPROM bytes)
+NonVolatile<long> longvar; // Uses EEPROM location 2-5 (4 EEPROM bytes)
 // Change "long" to "int" to see how eeprom locations change
-NvVar<long> arr[5]; // Uses EEPROM locations 6-25 (20 EEPROM bytes)
+NonVolatile<long> arr[5]; // Uses EEPROM locations 6-25 (20 EEPROM bytes)
 
-// EEPROM address 26-99 are not used. This can be usefull if you plan to add NvVar
+// EEPROM address 26-99 are not used. This can be usefull if you plan to add NonVolatile
 // variables later, in the first group of variables.
 
-// The 100 means the next NvVar variable will use EEPROM address 100
+// The 100 means the next NonVolatile variable will use EEPROM address 100
 // The "new_eeprom_address" object is just a syntactic artifact and is not used anywhere.
 NvAddress new_eeprom_address(100);
-NvVar<float> float1; // it uses EEPROM address 100-103 (8bit AVR floats are 4bytes)
-NvVar<float> float2; // Address 104-107.
-NvVar<unsigned long> eeprom_guard;
+NonVolatile<float> float1; // it uses EEPROM address 100-103 (8bit AVR floats are 4bytes)
+NonVolatile<float> float2; // Address 104-107.
+NonVolatile<unsigned long> eeprom_guard;
 
 // These macros are for convenience, to avoid tedious Serial.print(F("message"));
 #define PRINT(x) Serial.print(F(x));
@@ -28,14 +28,14 @@ NvVar<unsigned long> eeprom_guard;
 void setup() {
     Serial.begin(57600);
 
-    PRINTLN("############# NvVar tests ###############");
+    PRINTLN("############# NonVolatile tests ###############");
     PRINTLN("##### The values persist between resets #####");
 
     // This code runs at first upload
     // or when tha MAGIC_VALUE changes
     #define MAGIC_VALUE 12345
     if (eeprom_guard!=MAGIC_VALUE) {
-        PRINTLN("NvVar variables set to 0")
+        PRINTLN("NonVolatile variables set to 0")
         counter=0;
         longvar=0;
         for (int i=0;i<5;i++) arr[i]=0;
@@ -53,7 +53,7 @@ void setup() {
     float1+=0.2;
     PRINT("float1="); Serial.println(float1);
     {
-        // Never declare NvVar variables with local scope
+        // Never declare NonVolatile variables with local scope
         // not even static variables
         // The eeprom location is determined at runtime
         // and an automatic variable will point to different (elevated)
@@ -62,7 +62,7 @@ void setup() {
 
     // Change to false to hide addresses report
     if (true) {
-        PRINTLN("Any change in NvVar declarations can change the addresses");
+        PRINTLN("Any change in NonVolatile declarations can change the addresses");
         PRINT("counter.addr()=");Serial.println(counter.addr());
         PRINT("longvar.addr()=");Serial.println(longvar.addr());
 
@@ -83,9 +83,9 @@ void setup() {
 }
 
 void loop() {
-    // Never declare NvVar variables with local scope
+    // Never declare NonVolatile variables with local scope
     // not even static variables
-    // NvVar<int> i; // VERY BAD !
+    // NonVolatile<int> i; // VERY BAD !
     // Serial.println(i.addr());
     delay(500);
 }
