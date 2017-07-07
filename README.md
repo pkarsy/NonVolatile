@@ -25,9 +25,9 @@ Put the directory "NonVolatile" in the Arduino "libraries" location.
 Or you can put the "NonVolatile.h" file in the same location as the .ino file
 
 ### Types
-- **NonVolatile\<T\>** The most importand type this library offers. <T> can be bool,char,int,long
+- **NonVolatile\<T\>** The most importand type this library offers. **T** can be bool,char,int,long
 and the unsigned counterparts.
-- **NvCounter<T,N>** usually T is uint32_t(unsigned long). This special type
+- **NvCounter\<T,N\>** usually **T** is uint32_t(unsigned long). This special type
 is usefull only as counter (++ is the only operator working), and uses more EEPROM bytes
 but spreads the writes across the N extra bytes doind EEPROM wear leveling. So if every
 EEPROM cell withands 100000 writes, the counter can be incremented about 100000*N times.
