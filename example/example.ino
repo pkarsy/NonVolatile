@@ -14,9 +14,7 @@ NonVolatile<long> longarray[5];
 
 // The "100" means the next NonVolatile variable will use EEPROM location 100
 // The "_dummy_obj2" object is needed only for the syntax, it is not consuming RAM and is not used anywhere.
-// the compiled code will contain the equivalent of
-// non_volatile_idx = 100;
-// Generally you don't need/want this
+// Generally you don't need/want this.
 // NvAddress _dummy_obj2(100);
 
 NonVolatile<float> floatvar;
