@@ -1,7 +1,7 @@
 # This Makefile needs arduino-makefile
 # sudo apt-get install arduino-mk in any debian based distro
 BOARD_TAG     =  uno
-MONITOR_PORT  =  /dev/ttyACM0
+MONITOR_PORT  =  /dev/ttyUSB3
 include /usr/share/arduino/Arduino.mk
 
 send: all
