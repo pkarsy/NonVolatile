@@ -26,7 +26,6 @@ class NvSpace
     NvSpace(const unsigned int size) {
         non_volatile_idx += size;
     }
-
 };
 
 // to set a new EEPROM location for NonVolatile
@@ -113,8 +112,12 @@ class NonVolatile {
         return val;             // return the copy (the old) value.
     }
 
-    size_t addr() {
+    size_t start() {
         return size_t(address);
+    }
+
+    size_t end() {
+        return size_t(address)+sizeof(T)-1;
     }
 };
 
@@ -130,8 +133,6 @@ class NvCounter {
 
     void update_eeprom() {
         if (ram_value%256==0) {
-            //select++;
-            //if (select==N) select = 0
             select = (select+1)%N;
             eeprom_update_block(&select, address, 1); // Set select value
         }
@@ -142,13 +143,10 @@ class NvCounter {
 
     NvCounter() {
         address = non_volatile_idx;
-
         eeprom_read_block(&select, address, 1); // Get select value
         select = select%N;
         eeprom_read_block( &ram_value, address+1+select, sizeof(T) );
-
         non_volatile_idx += sizeof(T)+N;
-
     }
 
     operator T() const { return ram_value; }
@@ -171,5 +169,13 @@ class NvCounter {
         T val = ram_value;      // make a copy of the old value
         ++(*this);              // Now use the prefix version to do the work
         return val;             // return the copy (the old) value.
+    }
+
+    size_t start() {
+        return size_t(address);
+    }
+
+    size_t end() {
+        return size_t(address)+sizeof(T)+N-1;
     }
 };
