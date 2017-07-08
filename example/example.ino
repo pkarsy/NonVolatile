@@ -18,7 +18,7 @@ NonVolatile<long> longarray[5];
 // NvAddress _dummy_obj2(100);
 
 NonVolatile<float> floatvar;
-NonVolatile<unsigned long> eeprom_guard;
+NonVolatile<unsigned int> eeprom_guard;
 
 ////// These macros are for convenience, to avoid tedious Serial.print(F("message"));
 #define PRINT(x) Serial.print(F(x));
@@ -100,8 +100,7 @@ void setup() {
         PRINTLN("RAM:");
         PRINT("sizeof(boolvar)=");Serial.println(sizeof(boolvar));
         PRINT("For comparison sizeof(bool)=");Serial.println(sizeof(bool));
-        PRINTLN("RAM usage is the RAM the basetype uses plus 2");
-        //PRINT("sizeof(longarray)=");Serial.print(sizeof(longarray));PRINTLN("(bytes of RAM)");
+        PRINTLN("RAM usage is the RAM the basetype uses, plus 2");
     }
 
     PRINTLN("##### END #####");
