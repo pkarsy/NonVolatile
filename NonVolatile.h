@@ -58,40 +58,78 @@ class NonVolatile {
 
     operator T() const { return ram_value; }
 
-    NonVolatile & operator = (T v) {
+    //NonVolatile & operator = (T v) {
+    //    ram_value=v;
+    //    update_eeprom();
+    //    return *this;
+    //}
+    T operator = (T v) {
         ram_value=v;
         update_eeprom();
-        return *this;
+        return ram_value;
     }
 
-    NonVolatile & operator -= (T v) {
+    T operator = (NonVolatile<T> v) {
+        //ram_value=T(v);
+        //update_eeprom();
+        *this = T(v);
+        return ram_value;
+    }
+
+
+    //NonVolatile & operator -= (T v) {
+    //    ram_value -= v;
+    //    update_eeprom();
+    //    return *this;
+    //}
+    T operator -= (T v) {
         ram_value -= v;
         update_eeprom();
-        return *this;
+        return ram_value;
     }
 
-    NonVolatile & operator += (T v) {
+    //NonVolatile & operator += (T v) {
+    //    ram_value += v;
+    //    update_eeprom();
+    //    return *this;
+    //}
+    T operator += (T v) {
         ram_value += v;
         update_eeprom();
-        return *this;
+        return ram_value;
     }
 
-    NonVolatile & operator *= (T v) {
+    //NonVolatile & operator *= (T v) {
+    //    ram_value *= v;
+    //    update_eeprom();
+    //    return *this;
+    //}
+    T operator *= (T v) {
         ram_value *= v;
         update_eeprom();
-        return *this;
+        return ram_value;
     }
 
-    NonVolatile & operator /= (T v) {
+    //NonVolatile & operator /= (T v) {
+    //    ram_value /= v;
+    //    update_eeprom();
+    //    return *this;
+    //}
+    T operator /= (T v) {
         ram_value /= v;
         update_eeprom();
-        return *this;
+        return ram_value;
     }
 
-    NonVolatile & operator ++() { // prefix ++v
+    //NonVolatile & operator ++() { // prefix ++v
+    //    ram_value ++;
+    //    update_eeprom();
+    //    return *this;
+    //}
+    T operator ++() { // prefix ++v
         ram_value ++;
         update_eeprom();
-        return *this;
+        return ram_value;
     }
 
     T operator ++(int) {        // postfix v++
@@ -100,10 +138,15 @@ class NonVolatile {
         return val;             // return the copy (the old) value.
     }
 
-    NonVolatile & operator --() { // prefix --v
+    //NonVolatile & operator --() { // prefix --v
+    //    ram_value --;
+    //    update_eeprom();
+    //    return *this;
+    //}
+    T operator --() { // prefix --v
         ram_value --;
         update_eeprom();
-        return *this;
+        return ram_value;
     }
 
     T operator --(int) {        // postfix v--
@@ -135,6 +178,7 @@ class NvCounter {
         if (ram_value%256==0) {
             select = (select+1)%N;
             eeprom_update_block(&select, address, 1); // Set select value
+            if (select==0 and sizeof(T)>1) for(byte i=1;i<sizeof(T);i++) eeprom_update_byte(address+N+i,0xCC);
         }
         eeprom_update_block( &ram_value, address+1+select, sizeof(T) );
     }
@@ -151,18 +195,39 @@ class NvCounter {
 
     operator T() const { return ram_value; }
 
-    NvCounter & operator = (T v) {
+    //NvCounter & operator = (T v) {
+    //    if (v != ram_value) {
+    //        ram_value=v;
+    //        update_eeprom();
+    //    }
+    //    return *this;
+    //}
+    T operator = (T v) {
         if (v != ram_value) {
             ram_value=v;
             update_eeprom();
         }
-        return *this;
+        return ram_value;
     }
 
-    NvCounter & operator ++() { // prefix ++v
+    T operator = (NvCounter<T,N> v) {
+        *this = T(v);
+        //if (v != ram_value) {
+        //    ram_value=v;
+        //    update_eeprom();
+        //}
+        return ram_value;
+    }
+
+    //NvCounter & operator ++() { // prefix ++v
+    //    ram_value ++;
+    //    update_eeprom();
+    //    return *this;
+    //}
+    T operator ++() { // prefix ++v
         ram_value ++;
         update_eeprom();
-        return *this;
+        return ram_value;
     }
 
     T operator ++(int) {        // postfix v++
