@@ -98,8 +98,7 @@ if (eeprom_guard!=GUARD_SIGN) {
 and runs only once. If we change the declarations, most likely
 the code will run again (due to eeprom_guard misaligment) but
 to be sure we can change the GUARD_SIGN to 12340.
-Note that "eeprom_guard" must be itself an NonVolatile. See the
-[example](https://github.com/pkarsy/NonVolatile/blob/master/example/example.ino)
+Note that "eeprom_guard" must be itself an NonVolatile. See the examples.
 
 
 
