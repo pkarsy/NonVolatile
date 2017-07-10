@@ -82,22 +82,22 @@ should, you can prefix it with something meaningful like **nv_elevation**
 
 This fragment of code inside setup() contains all the NonVolatile variables we need
 ```C++
-#define MAGIC_VALUE 12345
-if (eeprom_guard!=MAGIC_VALUE) {
+#define GUARD_SIGN 12345
+if (eeprom_guard!=GUARD_SIGN) {
     // NonVolatile variables are set to 0
     counter=0;
     longvar=0;
     for (int i=0;i<5;i++) arr[i]=0;
     float1=0;
     float2=0;
-    eeprom_guard=MAGIC_VALUE;
+    eeprom_guard=GUARD_SIGN;
 }
 
 ```
 
 and runs only once. If we change the declarations, most likely
 the code will run again (due to eeprom_guard misaligment) but
-to be sure we can change the MAGIC_VALUE to 12340.
+to be sure we can change the GUARD_SIGN to 12340.
 Note that "eeprom_guard" must be itself an NonVolatile. See the
 [example](https://github.com/pkarsy/NonVolatile/blob/master/example/example.ino)
 
