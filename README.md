@@ -1,5 +1,5 @@
 # NonVolatile (Non Volatile Variable)
-Arduino persistent variables. They can be used like
+Arduino persistent bool and numeric variables. They can be used like
 global variables, but underneath all changes are saved to EEPROM
 
 In global section:
