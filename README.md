@@ -37,12 +37,12 @@ The next 2 types are not variables but can be used to set the eeprom address use
 not needed and can lead to hard to examine bugs, in case you set the EEPROM location wrong.
 
 - **NvAddress _dummy_var(addr)** Sets the EEPROM location of the next NonVolatile or NvCounter
-variable to **addr**. See example(TODO)
+variable to **addr**. See NvExample.
 - **NvSpace _dummy_var2(no_of_bytes)** Reserves some space in EEPROM, in case you need it for other purpose.
-The next defined variable, will point to the next byte after the reserved space. See example(TODO)
+The next defined variable, will point to the next byte after the reserved space. See NvExample.
 
 ### Intended use
-NonVolatile has a very specific purpose. To make it easier to store the (usually) very few
+NonVolatile has a very specific purpose. To make it easier to store and use, the (usually few)
 settings an Arduino project needs. It is unsuitable for data logging. Generally if there
 is a need to use a significant percentage of the EEPROM, you have to use another method.
 
