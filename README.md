@@ -16,8 +16,8 @@ Now in the code
 counter++; // The change is written to EEPROM
 elevation[5]=100; // Immediatelly writen to EEPROM
 elevation[5]=100; // The changes are NOT saved again to reduce EEPROM wear
-elevation[5]++;   // postfix
-Serial.print(--elevation[5]); // prefix
+Serial.print(elevation[5]++);   // postfix
+Serial.print(++elevation[5]);   // prefix
 for (int i=0;i<10;i++) elevation[i]=0;
 ```
 ### Installation
