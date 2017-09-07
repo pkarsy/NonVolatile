@@ -69,6 +69,7 @@ class NonVolatile {
         return ram_value;
     }
 
+    // This one is importand,
     T operator = (NonVolatile<T> v) {
         //ram_value=T(v);
         //update_eeprom();
@@ -76,56 +77,30 @@ class NonVolatile {
         return ram_value;
     }
 
-
-    //NonVolatile & operator -= (T v) {
-    //    ram_value -= v;
-    //    update_eeprom();
-    //    return *this;
-    //}
     T operator -= (T v) {
         ram_value -= v;
         update_eeprom();
         return ram_value;
     }
 
-    //NonVolatile & operator += (T v) {
-    //    ram_value += v;
-    //    update_eeprom();
-    //    return *this;
-    //}
     T operator += (T v) {
         ram_value += v;
         update_eeprom();
         return ram_value;
     }
 
-    //NonVolatile & operator *= (T v) {
-    //    ram_value *= v;
-    //    update_eeprom();
-    //    return *this;
-    //}
     T operator *= (T v) {
         ram_value *= v;
         update_eeprom();
         return ram_value;
     }
 
-    //NonVolatile & operator /= (T v) {
-    //    ram_value /= v;
-    //    update_eeprom();
-    //    return *this;
-    //}
     T operator /= (T v) {
         ram_value /= v;
         update_eeprom();
         return ram_value;
     }
 
-    //NonVolatile & operator ++() { // prefix ++v
-    //    ram_value ++;
-    //    update_eeprom();
-    //    return *this;
-    //}
     T operator ++() { // prefix ++v
         ram_value ++;
         update_eeprom();
@@ -138,11 +113,6 @@ class NonVolatile {
         return val;             // return the copy (the old) value.
     }
 
-    //NonVolatile & operator --() { // prefix --v
-    //    ram_value --;
-    //    update_eeprom();
-    //    return *this;
-    //}
     T operator --() { // prefix --v
         ram_value --;
         update_eeprom();
@@ -178,7 +148,8 @@ class NvCounter {
         if (ram_value%256==0) {
             select = (select+1)%N;
             eeprom_update_block(&select, address, 1); // Set select value
-            if (select==0 and sizeof(T)>1) for(byte i=1;i<sizeof(T);i++) eeprom_update_byte(address+N+i,0xCC);
+            // For debug only, comment out if you are not testing the library
+            // if (select==0 and sizeof(T)>1) for(byte i=1;i<sizeof(T);i++) eeprom_update_byte(address+N+i,0xCC);
         }
         eeprom_update_block( &ram_value, address+1+select, sizeof(T) );
     }
@@ -195,13 +166,6 @@ class NvCounter {
 
     operator T() const { return ram_value; }
 
-    //NvCounter & operator = (T v) {
-    //    if (v != ram_value) {
-    //        ram_value=v;
-    //        update_eeprom();
-    //    }
-    //    return *this;
-    //}
     T operator = (T v) {
         if (v != ram_value) {
             ram_value=v;
@@ -212,18 +176,9 @@ class NvCounter {
 
     T operator = (NvCounter<T,N> v) {
         *this = T(v);
-        //if (v != ram_value) {
-        //    ram_value=v;
-        //    update_eeprom();
-        //}
         return ram_value;
     }
 
-    //NvCounter & operator ++() { // prefix ++v
-    //    ram_value ++;
-    //    update_eeprom();
-    //    return *this;
-    //}
     T operator ++() { // prefix ++v
         ram_value ++;
         update_eeprom();
@@ -242,5 +197,10 @@ class NvCounter {
 
     size_t end() {
         return size_t(address)+sizeof(T)+N-1;
+    }
+
+    // For debugging purposes. Returns the value of the "select" variable
+    byte selected() {
+        return select;
     }
 };
