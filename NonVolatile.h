@@ -37,6 +37,19 @@ class NvAddress
     }
 };
 
+class NvFill
+{
+    public:
+    NvFill(const unsigned int size) {
+        byte* i = non_volatile_idx;
+        non_volatile_idx += size;
+        while (i<non_volatile_idx) {
+            eeprom_update_byte(i,0xff);
+            i++;
+        }
+    }
+};
+
 template <typename T>
 class NonVolatile {
     private:
