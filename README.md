@@ -55,6 +55,48 @@ lead to hard-to-examine bugs if you set the EEPROM location wrong.
   cleared. Useful at the end of the declarations. Note that filling is slow
   (about 3 ms per byte at startup).
 
+### Compile-time addresses
+
+The default `NonVolatile<T>` and `NvCounter<T,N>` assign EEPROM addresses at
+runtime, in declaration order. If you want the address to be fixed at compile
+time (stable across builds, no runtime cursor, no address member in RAM), use
+the `At` variants:
+
+```C++
+NonVolatileAt<uint16_t, 0> counter;      // EEPROM 0..1
+NvArrayAt<int, 2, 10> elevation;         // EEPROM 2..21 (int is 2 bytes on AVR)
+NvCounterAt<uint32_t, 5, 50> visits;     // EEPROM 50..58 (N=5, base=50)
+NvFillAt<100, 4> clear_old_layout;       // writes 0xFF to EEPROM 100..103
+```
+
+`NvFillAt<ADDR, SIZE>` is the compile-time equivalent of `NvFill`. The address
+is part of the type, so a `static_assert` checks that the declaration fits in
+the EEPROM at compile time. These declarations do not touch the runtime cursor.
+
+A plain array of `NonVolatileAt` would give every element the same address, so
+arrays use `NvArrayAt` instead. `NvArrayAt` stores no elements: `operator[]`
+returns a temporary proxy that reads and writes the selected element on
+demand. As a consequence, `auto& x = elevation[i]` is not supported; use
+`int x = elevation[i];` to read the value, or operate on `elevation[i]`
+directly. The proxy supports the same assignment, increment/decrement and
+compound operators as `NonVolatile`.
+
+#### Mixing runtime and compile-time addresses
+
+Compile-time declarations do not advance the runtime cursor. If a project uses
+both styles, keep the two regions disjoint and move the runtime cursor past the
+static region before declaring runtime variables:
+
+```C++
+NonVolatileAt<uint16_t, 0> fixed;   // EEPROM 0..1
+NvAddress skip_static(2);           // runtime cursor -> 2
+NonVolatile<uint16_t> runtime;      // EEPROM 2..3
+```
+
+There is no automatic overlap detection between the two styles. If runtime
+variables come first, choose static addresses at or above the runtime cursor's
+final value. Using only one style in a project is simplest.
+
 ### Intended use
 
 NonVolatile has a very specific purpose: to make it easier to store and use the
@@ -146,4 +188,7 @@ make test
 
 They cover address allocation, the path from RAM to EEPROM for all operators,
 `NvCounter` wear leveling across simulated resets, the header include guard,
-multi-translation-unit allocation, and the out-of-EEPROM fatal path.
+multi-translation-unit allocation, the compile-time API (scalars, arrays,
+counters, fills, boundary addresses and static multi-TU declarations), the
+compile-failure check for out-of-range static addresses, and the out-of-EEPROM
+fatal path.

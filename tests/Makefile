@@ -12,12 +12,14 @@ BINARIES := \
 	$(BUILD)/test_counter \
 	$(BUILD)/test_double_include \
 	$(BUILD)/test_multitu \
+	$(BUILD)/test_static \
+	$(BUILD)/test_static_multitu \
 	$(BUILD)/bounds_space \
 	$(BUILD)/bounds_tail \
 	$(BUILD)/bounds_address \
 	$(BUILD)/bounds_fill
 
-.PHONY: all test clean
+.PHONY: all test clean static-bounds-fail
 
 all: $(BINARIES)
 
@@ -36,6 +38,12 @@ $(BUILD)/test_double_include: test_double_include.cpp avr/eeprom.h ../NonVolatil
 $(BUILD)/test_multitu: test_multitu.cpp tu_a.cpp tu_b.cpp avr/eeprom.h ../NonVolatile.h | $(BUILD)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ test_multitu.cpp tu_a.cpp tu_b.cpp
 
+$(BUILD)/test_static: test_static.cpp avr/eeprom.h ../NonVolatile.h | $(BUILD)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $<
+
+$(BUILD)/test_static_multitu: test_static_multitu.cpp tu_static_a.cpp tu_static_b.cpp avr/eeprom.h ../NonVolatile.h | $(BUILD)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ test_static_multitu.cpp tu_static_a.cpp tu_static_b.cpp
+
 $(BUILD)/bounds_space: test_bounds.cpp avr/eeprom.h ../NonVolatile.h | $(BUILD)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -DNV_BOUNDS_SPACE -o $@ $<
 
@@ -53,6 +61,8 @@ test: all
 	./$(BUILD)/test_counter
 	./$(BUILD)/test_double_include
 	./$(BUILD)/test_multitu
+	./$(BUILD)/test_static
+	./$(BUILD)/test_static_multitu
 	@for t in bounds_space bounds_tail bounds_address bounds_fill; do \
 		status=0; \
 		timeout 1 ./$(BUILD)/$$t || status=$$?; \
@@ -62,7 +72,22 @@ test: all
 		fi; \
 		echo "$$t: OK (fatal hang, no out-of-range access)"; \
 	done
+	@$(MAKE) --no-print-directory static-bounds-fail
 	@echo "All tests passed"
+
+static-bounds-fail: | $(BUILD)
+	@if $(CXX) $(CPPFLAGS) $(CXXFLAGS) -c test_static_bounds_fail.cpp -o /dev/null 2>$(BUILD)/static_bounds_fail.err; then \
+		echo "FAIL: out-of-range static declaration compiled"; \
+		exit 1; \
+	else \
+		if grep -q "does not fit in the EEPROM" $(BUILD)/static_bounds_fail.err; then \
+			echo "static bounds: out-of-range declaration rejected (OK)"; \
+		else \
+			echo "FAIL: compile failed for the wrong reason"; \
+			cat $(BUILD)/static_bounds_fail.err; \
+			exit 1; \
+		fi; \
+	fi
 
 clean:
 	rm -rf $(BUILD)

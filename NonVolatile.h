@@ -75,6 +75,79 @@ inline void nv_read(T& value, const uint8_t* from) {
     eeprom_read_block(&value, from, sizeof(T));
 }
 
+// Address policies ---------------------------------------------------
+//
+// NonVolatile / NvCounter take an address policy as a template
+// parameter. The policy decides where the value lives in the EEPROM:
+//
+// - NvRuntimeAddress keeps the historical behavior: the address is
+//   allocated from the shared runtime cursor, in declaration order.
+// - NvStaticAddress<ADDR> makes the address part of the type. It is
+//   empty, so it costs no RAM and the address is known at compile time.
+//   Static declarations do not advance the runtime cursor; when mixing
+//   them with runtime declarations, keep the two regions disjoint
+//   (NvAddress can move the runtime cursor past a static region).
+// - NvExplicitAddress carries a runtime address. It is used internally
+//   by the array proxy, where the address depends on the element index.
+
+struct NvRuntimeAddress {
+    uint8_t* address;
+
+    explicit NvRuntimeAddress(uint8_t* a) : address(a) {}
+
+    static NvRuntimeAddress allocate(size_t n) {
+        uint8_t* start = nv_index();
+        nv_reserve_or_die(n);
+        return NvRuntimeAddress(start);
+    }
+
+    uint16_t get() const {
+        return (uint16_t)(uintptr_t)address;
+    }
+};
+
+template <uint16_t ADDR>
+struct NvStaticAddress {
+    static NvStaticAddress allocate(size_t) {
+        return NvStaticAddress();
+    }
+
+    constexpr uint16_t get() const {
+        return ADDR;
+    }
+};
+
+struct NvExplicitAddress {
+    uint16_t address;
+
+    explicit NvExplicitAddress(uint16_t a) : address(a) {}
+
+    // A default-constructed object has no meaningful address. This
+    // path is only reachable if the policy is misused directly.
+    static NvExplicitAddress allocate(size_t) {
+        nv_fatal();
+        return NvExplicitAddress(0);
+    }
+
+    uint16_t get() const {
+        return address;
+    }
+};
+
+// Compile-time EEPROM fit check. Static addresses are validated with
+// static_assert in NonVolatile/NvCounter; runtime addresses are checked
+// by nv_reserve_or_die() when they are allocated.
+template <typename Policy, size_t Size>
+struct NvBounds {
+    static constexpr bool ok = true;
+};
+
+template <uint16_t ADDR, size_t Size>
+struct NvBounds<NvStaticAddress<ADDR>, Size> {
+    static constexpr bool ok =
+        (size_t)ADDR + Size <= (size_t)E2END + 1;
+};
+
 // To keep some space reserved, in the declarations
 class NvSpace
 {
@@ -112,24 +185,54 @@ class NvFill
     }
 };
 
-template <typename T>
-class NonVolatile {
+// Compile-time fill: overwrite SIZE bytes starting at ADDR with 0xFF.
+// Like NvFill, but the region is fixed at compile time and does not
+// touch the runtime cursor. Useful at the end of the static
+// declarations to clear stale data from an old layout.
+template <uint16_t ADDR, size_t SIZE>
+class NvFillAt {
+    static_assert((size_t)ADDR + SIZE <= (size_t)E2END + 1,
+                  "NvFillAt: region does not fit in the EEPROM");
+
+    public:
+    NvFillAt() {
+        for (size_t i = 0; i < SIZE; i++) {
+            eeprom_update_byte((uint8_t*)(uintptr_t)((size_t)ADDR + i),0xff);
+        }
+    }
+};
+
+template <typename T, typename Address = NvRuntimeAddress>
+class NonVolatile : private Address {
+    static_assert(NvBounds<Address, sizeof(T)>::ok,
+                  "NonVolatile: address does not fit in the EEPROM");
+
     private:
 
     T ram_value;
-    uint8_t* address;
+
+    uint8_t* address_ptr() const {
+        return (uint8_t*)(uintptr_t)Address::get();
+    }
+
+    void load_eeprom() {
+        nv_read(ram_value, address_ptr());
+    }
 
     void update_eeprom() {
-        eeprom_update_block( &ram_value, address, sizeof(T) );
+        eeprom_update_block( &ram_value, address_ptr(), sizeof(T) );
     }
 
     public:
 
-    NonVolatile() {
-        const size_t start = (size_t)(uintptr_t)nv_index();
-        nv_reserve_or_die(sizeof(T)); // Check before reading the EEPROM
-        address = (uint8_t*)(uintptr_t)start;
-        nv_read(ram_value, address);
+    NonVolatile() : Address(Address::allocate(sizeof(T))) {
+        load_eeprom();
+    }
+
+    // Explicit-address constructor, used by the array proxy and by
+    // advanced users. It does not allocate from the runtime cursor.
+    explicit NonVolatile(const Address & address) : Address(address) {
+        load_eeprom();
     }
 
     operator T() const { return ram_value; }
@@ -141,7 +244,7 @@ class NonVolatile {
     }
 
     // This one is importand,
-    NonVolatile & operator = (const NonVolatile<T> & v) {
+    NonVolatile & operator = (const NonVolatile & v) {
         *this = T(v);
         return *this;
     }
@@ -195,45 +298,90 @@ class NonVolatile {
     }
 
     size_t start() const {
-        return size_t(address);
+        return (size_t)Address::get();
     }
 
     size_t end() const {
-        return size_t(address)+sizeof(T)-1;
+        return (size_t)Address::get()+sizeof(T)-1;
+    }
+};
+
+// Compile-time (static) EEPROM address variant of NonVolatile.
+template <typename T, uint16_t ADDR>
+using NonVolatileAt = NonVolatile<T, NvStaticAddress<ADDR>>;
+
+// Compile-time array. The array itself stores no elements: operator[]
+// returns a proxy (a NonVolatile with an explicit address) that reads
+// and writes BASE + i*sizeof(T) on demand.
+//
+// Because the proxy is a temporary, binding an lvalue reference to an
+// element (auto& x = array[i]) is not supported.
+template <typename T, uint16_t BASE, size_t COUNT>
+class NvArrayAt {
+    static_assert(COUNT > 0, "NvArrayAt: COUNT must be greater than zero");
+    static_assert((size_t)BASE + COUNT * sizeof(T) <= (size_t)E2END + 1,
+                  "NvArrayAt: array does not fit in the EEPROM");
+
+    public:
+
+    typedef NonVolatile<T, NvExplicitAddress> Element;
+
+    Element operator[](size_t i) const {
+        if (i >= COUNT) {
+            nv_fatal();
+        }
+        return Element(NvExplicitAddress(
+            (uint16_t)((size_t)BASE + i * sizeof(T))));
+    }
+
+    static constexpr size_t size() {
+        return COUNT;
     }
 };
 
 // wear leveling counter
 // only for uint8_t uint16_t uint32_t
-template <typename T, uint8_t N>
-class NvCounter {
+template <typename T, uint8_t N, typename Address = NvRuntimeAddress>
+class NvCounter : private Address {
     static_assert(N > 0, "NvCounter: N must be greater than zero");
+    static_assert(NvBounds<Address, (size_t)sizeof(T) + (size_t)N>::ok,
+                  "NvCounter: address does not fit in the EEPROM");
 
     private:
 
     T ram_value;
-    uint8_t* address;
     uint8_t select;
+
+    uint8_t* address_ptr() const {
+        return (uint8_t*)(uintptr_t)Address::get();
+    }
+
+    void init() {
+        eeprom_read_block(&select, address_ptr(), 1); // Get select value
+        select = select%N;
+        eeprom_read_block( &ram_value, address_ptr()+1+select, sizeof(T) );
+    }
 
     void update_eeprom() {
         if (ram_value%256==0) {
             select = (select+1)%N;
-            eeprom_update_block(&select, address, 1); // Set select value
+            eeprom_update_block(&select, address_ptr(), 1); // Set select value
             // For debug only, comment out if you are not testing the library
-            // if (select==0 and sizeof(T)>1) for(uint8_t i=1;i<sizeof(T);i++) eeprom_update_byte(address+N+i,0xCC);
+            // if (select==0 and sizeof(T)>1) for(uint8_t i=1;i<sizeof(T);i++) eeprom_update_byte(address_ptr()+N+i,0xCC);
         }
-        eeprom_update_block( &ram_value, address+1+select, sizeof(T) );
+        eeprom_update_block( &ram_value, address_ptr()+1+select, sizeof(T) );
     }
 
     public:
 
-    NvCounter() {
-        const size_t start = (size_t)(uintptr_t)nv_index();
-        nv_reserve_or_die((size_t)sizeof(T) + (size_t)N);
-        address = (uint8_t*)(uintptr_t)start;
-        eeprom_read_block(&select, address, 1); // Get select value
-        select = select%N;
-        eeprom_read_block( &ram_value, address+1+select, sizeof(T) );
+    NvCounter() : Address(Address::allocate((size_t)sizeof(T) + (size_t)N)) {
+        init();
+    }
+
+    // Explicit-address constructor, used by array proxies and by
+    // advanced users. It does not allocate from the runtime cursor.
+    explicit NvCounter(const Address & address) : Address(address) {
+        init();
     }
 
     operator T() const { return ram_value; }
@@ -246,7 +394,7 @@ class NvCounter {
         return *this;
     }
 
-    NvCounter & operator = (const NvCounter<T,N> & v) {
+    NvCounter & operator = (const NvCounter & v) {
         *this = T(v);
         return *this;
     }
@@ -264,11 +412,11 @@ class NvCounter {
     }
 
     size_t start() const {
-        return size_t(address);
+        return (size_t)Address::get();
     }
 
     size_t end() const {
-        return size_t(address)+sizeof(T)+N-1;
+        return (size_t)Address::get()+sizeof(T)+N-1;
     }
 
     // For debugging purposes. Returns the value of the "select" variable
@@ -276,5 +424,9 @@ class NvCounter {
         return select;
     }
 };
+
+// Compile-time (static) EEPROM address variant of NvCounter.
+template <typename T, uint8_t N, uint16_t ADDR>
+using NvCounterAt = NvCounter<T, N, NvStaticAddress<ADDR>>;
 
 #endif // NONVOLATILE_H

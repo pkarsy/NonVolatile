@@ -1,6 +1,13 @@
 # NonVolatile TODO
 
-Remaining work after `d7129e6` / version 1.1.0.
+Remaining work after version 1.2.0.
+
+## Done in 1.2.0
+
+- [x] Compile-time EEPROM addresses: `NonVolatileAt`, `NvCounterAt`, `NvArrayAt`, `NvFillAt`.
+- [x] Compile-time bounds checks and host/AVR regression coverage.
+- [x] Mixing/coexistence rules and the array-proxy temporary caveat documented.
+- [x] `CHANGELOG.md` and the 1.2.0 version bump.
 
 ## P0 - verify on the real toolchain and hardware
 
@@ -39,7 +46,7 @@ Remaining work after `d7129e6` / version 1.1.0.
 
 - [x] README said "See NvExample" for `NvFill` even though `NvExample.ino` has no
       `NvFill` declaration; the misleading reference was removed from the README.
-- [ ] Add `CHANGELOG.md` and tag `v1.1.0`.
+- [x] Add `CHANGELOG.md` and tag `v1.2.0`.
 - [ ] Document that the empty `NvAddress` / `NvSpace` / `NvFill` globals still occupy
       1 byte of RAM each.
 - [ ] Update the installation instructions for Arduino Library Manager.
@@ -60,6 +67,17 @@ Remaining work after `d7129e6` / version 1.1.0.
 - [ ] Decide whether the empty marker objects can be made zero-size (C++20
       `[[no_unique_address]]`); otherwise keep the 1-byte cost documented.
 - [ ] Consider `--`, `-=`, etc. for `NvCounter`; currently `=` and `++` only by design.
+
+## After 1.2.0
+
+- [ ] Automatic declaration-order compile-time allocation without explicit addresses.
+      Not implemented: the static API requires an explicit address per declaration.
+- [ ] Spike an `EEMEM`/linker-based automatic static layout as an alternative to
+      explicit `NonVolatileAt` addresses.
+- [ ] An `NvArrayAt` alternative that stores elements so `auto& x = array[i]` works
+      (the current proxy is a temporary; documented in the README).
+- [ ] Compile-time counter arrays (`NvCounterAt` currently covers single counters).
+- [ ] Add `arduino-cli` example compilation to CI.
 
 ## Out of scope
 

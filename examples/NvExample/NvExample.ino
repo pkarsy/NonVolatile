@@ -19,6 +19,11 @@ NonVolatile<long> longarray[5];
 NonVolatile<float> floatvar;
 NonVolatile<unsigned int> eeprom_guard;
 
+// Compile-time EEPROM addresses. These are independent of the runtime
+// cursor and are laid out at fixed locations.
+NonVolatileAt<uint16_t, 200> fixed_counter;   // EEPROM 200..201
+NvArrayAt<int, 202, 3> fixed_array;           // EEPROM 202..207 on AVR
+
 // These macros are for convenience, to avoid tedious Serial.print(F("message"));
 #define PRINT(x) Serial.print(F(x));
 #define PRINTLN(x) Serial.println(F(x));
@@ -43,6 +48,8 @@ void setup() {
         boolvar= false;
         for (int i=0;i<5;i++) longarray[i]=0;
         floatvar=0;
+        fixed_counter=0;
+        for (int i=0;i<3;i++) fixed_array[i]=0;
         eeprom_guard=EEPROM_GUARD_SIGNATURE;
     }
 
@@ -81,6 +88,24 @@ void setup() {
     Serial.print(floatvar.start());
     PRINT("..");
     Serial.println(floatvar.end());
+
+    // Compile-time addressed variables support the same operators.
+    fixed_counter++;
+    PRINT("fixed_counter=");
+    Serial.print((unsigned int)fixed_counter);
+    PRINT(" EEPROM : ");
+    Serial.print(fixed_counter.start());
+    PRINT("..");
+    Serial.println(fixed_counter.end());
+
+    fixed_array[1]+=5;
+    for (int i=0;i<3;i++) {
+        PRINT("fixed_array["); Serial.print(i); PRINT("] = ");
+        Serial.print((int)fixed_array[i]); PRINT(" EEPROM : ");
+        Serial.print(fixed_array[i].start());
+        PRINT("..");
+        Serial.println(fixed_array[i].end());
+    }
 
     {
         // Never declare NonVolatile variables with local scope
