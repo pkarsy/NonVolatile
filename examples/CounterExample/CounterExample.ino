@@ -80,7 +80,7 @@ void setup() {
     }
 
     PRINTLN("The \"EE EE\" at start and end are the marker1 and marker2");
-    PRINTLN("You need to increment the counter at least 500 times to");
+    PRINTLN("You need to increment the counter at least 256 times to");
     PRINTLN("become apparent what it happens");
     PRINTLN("To increment the counter press SPACE");
 }

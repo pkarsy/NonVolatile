@@ -1,0 +1,13 @@
+#######################################
+# Syntax Coloring Map For NonVolatile
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+NonVolatile	KEYWORD1
+NvCounter	KEYWORD1
+NvSpace	KEYWORD1
+NvAddress	KEYWORD1
+NvFill	KEYWORD1

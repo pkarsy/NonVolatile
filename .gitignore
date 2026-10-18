@@ -5,3 +5,4 @@ nimcache
 /rfboot.wiki
 /test
 old
+tests/build/

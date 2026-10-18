@@ -7,8 +7,8 @@ In global section:
 ```C++
 #include <NonVolatile.h>
 // WARNING : NonVolatile can only be GLOBAL variables
-NonVolatile<uint16_t> counter;      // Uses EEPROM addreeses 0-1
-NonVolatile<int> elevation[10];     // Uses addresses 3-22
+NonVolatile<uint16_t> counter;      // Uses EEPROM addresses 0-1
+NonVolatile<int> elevation[10];     // Uses addresses 2-21
 ```
 Now in the code
 ```C++
@@ -28,8 +28,8 @@ Or you can put the "NonVolatile.h" file in the same location as the .ino file
 - **NonVolatile\<T\>** The most importand type this library offers. **T** can be bool,char,int,long
 and the unsigned counterparts.
 - **NvCounter\<T,N\>** usually **T** is uint32_t(unsigned long). This special type
-is usefull only as counter (++ is the only operator working), and uses more EEPROM bytes
-but spreads the writes across the N extra bytes doind EEPROM wear leveling. So if every
+is usefull only as counter (**=** and **++** are the supported operations), and uses
+more EEPROM bytes but spreads the writes across the N extra bytes doind EEPROM wear leveling. So if every
 EEPROM cell withands 100000 writes, the counter can be incremented about 100000*N times.
 See NvCounter Example.
 
@@ -40,6 +40,9 @@ not needed and can lead to hard to examine bugs, in case you set the EEPROM loca
 variable to **addr**. See NvExample.
 - **NvSpace _dummy_var2(no_of_bytes)** Reserves some space in EEPROM, in case you need it for other purpose.
 The next defined variable, will point to the next byte after the reserved space. See NvExample.
+- **NvFill _dummy_var3(no_of_bytes)** Like **NvSpace**, but also overwrites the reserved bytes with
+0xFF, so stale values from an old declaration layout are cleared. Useful at the end of the declarations.
+See NvExample. Note that filling is slow (about 3ms per byte at startup).
 
 ### Intended use
 NonVolatile has a very specific purpose. To make it easier to store and use, the (usually few)
@@ -51,9 +54,11 @@ Although NonVolatile variables look and feel just like normal variables,
 there are some things to keep in mind:
 - **You must declare them as global variables.** The eeprom location is
 determined at runtime. If they are local, they point to elevated EEPROM
-location every time. **There are no boundary checks in the code**.
-Declare all of them one after another,
-like the example above.
+location every time. Declare all of them one after another, like the
+example above.
+- Declarations that do not fit in the EEPROM are detected at startup. The
+sketch hangs instead of wrapping around and overwriting other values (a
+reset could cause EEPROM wear).
 - The location in EEPROM is determined at runtime. **If the order of the
 declarations change, the values of NonVolatile variables
 can change to different and unexpected values.** If you change the order
@@ -77,6 +82,22 @@ the basetype.
 should, you can prefix it with something meaningful like **nv_elevation**
 - Large arrays are RAM hungry. sizeof(arr) gives the RAM they use.
 
+### Data integrity caveats
+
+EEPROM writes are not atomic. A reset or power loss in the middle of a
+multi-byte write (or in the middle of an **NvCounter** rotation) can
+leave a partially written value. The library does not store a checksum
+or a second copy, so a torn write is not detected or repaired.
+
+The read-modify-write operators (**++**, **--**, **+=**, ...) are not
+atomic with respect to interrupts. If the same variable is modified
+from an ISR and from `loop()`, guard the accesses (for example with
+`noInterrupts()`/`interrupts()`) or make sure there is only one writer.
+
+EEPROM cells tolerate roughly 100000 writes. The library skips bytes
+that did not change, but frequent updates still wear the EEPROM; see
+**NvCounter** for counters that are updated often.
+
 
 ### Guard variabe
 
@@ -99,6 +120,21 @@ and runs only once. If we change the declarations, most likely
 the code will run again (due to eeprom_guard misaligment) but
 to be sure we can change the GUARD_SIGN to 12340.
 Note that "eeprom_guard" must be itself an NonVolatile. See the examples.
+
+### Tests
+
+Host-side regression tests (no Arduino toolchain needed, the EEPROM is
+mocked) live in `tests/`:
+
+```sh
+cd tests
+make test
+```
+
+They cover address allocation, the path from RAM to EEPROM for all
+operators, `NvCounter` wear leveling across simulated resets, the
+header include guard, multi-translation-unit allocation, and the
+out-of-EEPROM fatal path.
 
 
 
