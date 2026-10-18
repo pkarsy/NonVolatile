@@ -37,8 +37,8 @@ Remaining work after `d7129e6` / version 1.1.0.
 
 ## P2 - documentation and examples
 
-- [ ] README says "See NvExample" for `NvFill`, but `NvExample.ino` has no `NvFill`
-      declaration; add a commented example or fix the README reference.
+- [x] README said "See NvExample" for `NvFill` even though `NvExample.ino` has no
+      `NvFill` declaration; the misleading reference was removed from the README.
 - [ ] Add `CHANGELOG.md` and tag `v1.1.0`.
 - [ ] Document that the empty `NvAddress` / `NvSpace` / `NvFill` globals still occupy
       1 byte of RAM each.
